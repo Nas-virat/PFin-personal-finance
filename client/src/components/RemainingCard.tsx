@@ -1,6 +1,7 @@
 
 
 export const RemainingCard = ({
+    date,
     revenue,
     expense,
     remaining,
@@ -10,7 +11,7 @@ export const RemainingCard = ({
         <div className="w-5/6 mx-9 bg-pf-gray-900 rounded-xl">
             <div className="flex justify-between items-center px-4 py-2">
                 <p className="text-pf-gray-100 font-bold text-xl">Remaining</p>
-                <p className="text-pf-gray-100 font-bold text-xl">current month</p>
+                <p className="text-pf-gray-100 font-bold text-xl">{date}</p>
             </div>
             <div className="flex justify-between items-center px-4 py-2">
                 <p className="text-pf-accent-2 font-bold text-xl">{remaining.toLocaleString(undefined, { maximumFractionDigits: 2 })}</p>

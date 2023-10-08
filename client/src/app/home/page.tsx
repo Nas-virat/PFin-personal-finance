@@ -41,6 +41,7 @@ export default function Page() {
             <div className="mt-10 flex">
                 <div className="w-1/2 flex flex-col justify-center items-center bg-pf-gray-100">
                     <RemainingCard
+                        date={dayjs().format('MMMM YYYY').toString()}
                         revenue={12000}
                         expense={5000}
                         remaining={7000}

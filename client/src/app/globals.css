@@ -2,3 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+ *{
+    font-family: Roboto Slab;
+ }
+
+ body{
+    background-color: #EAE9E9;   
+ }

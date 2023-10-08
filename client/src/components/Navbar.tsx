@@ -11,27 +11,27 @@ export const Navbar = () => {
     const [open, setOpen] = useState(false);
 
     return (
-        <div className='w-full h-30 bg-pf-primary-3 fixed top-0 left-0 right-0 z-navbar px-12'>
-            <div className='flex justify-between items-center h-full'>  
+        <div className='w-full h-32 bg-pf-primary-3 fixed top-0 left-0 right-0 z-navbar px-12'>
+            <div className='flex justify-around items-center h-full'>  
                 <img src='/Logo.png' className='h-5/6'/>
                 <div className='flex items-center mr-24'>
-                    <div className=' hidden text-pf-gray-100 font-bold text-3xl ml-3 lg:block hover:text-pf-accent-2'>
-                        Home
+                    <div className=' hidden text-pf-gray-100 font-bold text-2xl ml-3 lg:block hover:text-pf-accent-2'>
+                        <Link href='/home'>Home</Link>
                     </div>
-                    <div className='hidden text-pf-gray-100 font-bold text-3xl ml-20 lg:block hover:text-pf-accent-2'>
-                        Balance
+                    <div className='hidden text-pf-gray-100 font-bold text-2xl ml-20 lg:block hover:text-pf-accent-2'>
+                        <Link href='/balance'>Balance</Link>
                     </div>
-                    <div className='hidden text-pf-gray-100 font-bold text-3xl ml-20 lg:block hover:text-pf-accent-2'>
-                        Revenue & Expense
+                    <div className='hidden text-pf-gray-100 font-bold text-2xl ml-20 lg:block hover:text-pf-accent-2'>
+                        <Link href='/incomeexpense'>Revenue & Expense</Link>
                     </div>
-                    <div className='hidden text-pf-gray-100 font-bold text-3xl ml-20 lg:block hover:text-pf-accent-2'>
-                        Investment
+                    <div className='hidden text-pf-gray-100 font-bold text-2xl ml-20 lg:block hover:text-pf-accent-2'>
+                        <Link href='/investment'>Investment</Link>
                     </div>
-                    <div className='hidden text-pf-gray-100 font-bold text-3xl ml-20 lg:block hover:text-pf-accent-2'>
-                        Analysis
+                    <div className='hidden text-pf-gray-100 font-bold text-2xl ml-20 lg:block hover:text-pf-accent-2'>
+                        <Link href='/analysis'>Analysis</Link>
                     </div>
-                    <div className='hidden text-pf-gray-100 font-bold text-3xl ml-20 lg:block hover:text-pf-accent-2'>
-                        Setting
+                    <div className='hidden text-pf-gray-100 font-bold text-2xl ml-20 lg:block hover:text-pf-accent-2'>
+                        <Link href='/setting'>Setting</Link>
                     </div>
                 </div>
                 <button 

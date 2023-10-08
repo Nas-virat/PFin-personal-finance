@@ -10,6 +10,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import dayjs from 'dayjs';
 import { RemainingCard } from '@/components/RemainingCard';
+import { BalanceChart } from '@/components/chart/BalanceChart';
+import { Card } from '@/components/Card';
+import { DoughnutChart } from '@/components/chart/DoughnutChart';
+
 
 export default function Page() {
     return (
@@ -30,7 +34,7 @@ export default function Page() {
                 </div>
                 <div className='flex justify-between items-center w-60'>
                     <p className='text-[24px]'>Add Transaction</p>
-                    <div className='text-white flex justify-center items-center rounded-full bg-[#F77F00] w-14 h-14'>
+                    <div className='text-pf-gray-100 flex justify-center items-center rounded-full bg-[#F77F00] w-14 h-14'>
                         <FontAwesomeIcon 
                             icon={faPlus} 
                             size='1x'
@@ -39,7 +43,7 @@ export default function Page() {
                 </div>
             </div>
             <div className="mt-10 flex">
-                <div className="w-1/2 flex flex-col justify-center items-center bg-pf-gray-100">
+                <div className="w-1/2 flex flex-col items-center bg-pf-gray-100 z-10">
                     <RemainingCard
                         date={dayjs().format('MMMM YYYY').toString()}
                         revenue={12000}
@@ -47,9 +51,28 @@ export default function Page() {
                         remaining={7000}
                         credit={1000} 
                     />
+                    <BalanceChart  
+                        equity={5000}
+                        debt={1000}
+                    />
                 </div>
-                <div className="w-1/2 flex justify-center bg-pf-gray-100">
-                    Hello
+                <div className="w-1/2 flex bg-pf-gray-100">
+                    <Card>
+                        <p className="text-pf-gray-100 font-bold text-3xl">Revenue</p>
+                        <div className='w-full flex justify-center'>
+                            <DoughnutChart 
+                                data={[12000,5000]}
+                                labels={['Food','Travel']}
+                            />
+                        </div>
+                        <p className="text-pf-gray-100 font-bold text-3xl">Expense</p>
+                        <div className='w-full flex justify-center'>
+                            <DoughnutChart 
+                                data={[12000,5000]}
+                                labels={['Food','Travel']}
+                            />
+                        </div>
+                    </Card>
                 </div>
             </div>
         </div>

@@ -9,3 +9,7 @@
  body{
     background-color: #EAE9E9;   
  }
+
+ .z-navbar{
+   z-index: 999 !important;
+}

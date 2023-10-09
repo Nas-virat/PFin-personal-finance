@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React,{useState} from 'react';
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -8,7 +8,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { RemainingCard } from '@/components/RemainingCard';
 import { BalanceChart } from '@/components/chart/BalanceChart';
 import { Card } from '@/components/Card';
@@ -16,6 +16,9 @@ import { DoughnutChart } from '@/components/chart/DoughnutChart';
 
 
 export default function Page() {
+
+    const [date, setDate] = useState<Dayjs>(dayjs());
+
     return (
         <div>
             <div className='flex justify-around text-pf-gray-900 font-bold text-2xl'>
@@ -28,6 +31,8 @@ export default function Page() {
                                 label={'select year and month'} 
                                 views={['month', 'year']}
                                 defaultValue={dayjs()}
+                                value={date}
+                                onChange={(newValue : Dayjs) => setDate(newValue)}
                             />
                         </DemoContainer>
                     </LocalizationProvider>
@@ -45,7 +50,7 @@ export default function Page() {
             <div className="mt-10 flex">
                 <div className="w-1/2 flex flex-col items-center bg-pf-gray-100 z-10">
                     <RemainingCard
-                        date={dayjs().format('MMMM YYYY').toString()}
+                        date={date.format('MMMM YYYY').toString()}
                         revenue={12000}
                         expense={5000}
                         remaining={7000}

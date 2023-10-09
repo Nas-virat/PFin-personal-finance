@@ -42,10 +42,18 @@ export const options = {
         pointStyle: 'circle',
         color: '#FFFFFF',
         font:{
-          size: 16,
+          size: 20,
         },
       },
     },
+    tooltip:{
+      titleFont:{
+        size: 20,
+      },
+      bodyFont:{
+        size: 20,
+      },
+    }
   },
   responsive: true,
   scales: {
@@ -54,7 +62,7 @@ export const options = {
       ticks: {
         color: '#FFFFFF',
         font: {
-          size: 16,
+          size: 20,
         },
       }
     },
@@ -63,7 +71,7 @@ export const options = {
       ticks: {
         color: '#FFFFFF',
         font: {
-          size: 16,
+          size: 20,
         },
       }
     },
@@ -107,6 +115,8 @@ export const  BalanceChart = ({
       <Bar 
           options={options} 
           data={data} 
+          height={400}
+          width={800}
       />
     </Card>
   );

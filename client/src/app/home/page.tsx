@@ -32,7 +32,11 @@ export default function Page() {
                                 views={['month', 'year']}
                                 defaultValue={dayjs()}
                                 value={date}
-                                onChange={(newValue : Dayjs) => setDate(newValue)}
+                                onChange={(newValue: Dayjs | null) => {
+                                    if (newValue) {
+                                        setDate(newValue);
+                                    }
+                                }}
                             />
                         </DemoContainer>
                     </LocalizationProvider>

@@ -6,13 +6,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import dayjs, { Dayjs } from 'dayjs';
 import { RemainingCard } from '@/components/RemainingCard';
 import { BalanceChart } from '@/components/chart/BalanceChart';
 import { Card } from '@/components/Card';
 import { DoughnutChart } from '@/components/chart/DoughnutChart';
+import { AddButton } from '@/components/Addbutton';
 
 
 export default function Page() {
@@ -21,7 +20,7 @@ export default function Page() {
 
     return (
         <div>
-            <div className='flex justify-around text-pf-gray-900 font-bold text-2xl'>
+            <div className='flex justify-between mx-32 text-pf-gray-900 font-bold text-2xl'>
                 <h1 className='text-[48px]'>Home page</h1>
                 <div className='flex justify-between items-center w-100'>
                     <p className='text-[24px] px-4'>Select Date :</p>
@@ -41,15 +40,8 @@ export default function Page() {
                         </DemoContainer>
                     </LocalizationProvider>
                 </div>
-                <div className='flex justify-between items-center w-60'>
-                    <p className='text-[24px]'>Add Transaction</p>
-                    <div className='text-pf-gray-100 flex justify-center items-center rounded-full bg-[#F77F00] w-14 h-14'>
-                        <FontAwesomeIcon 
-                            icon={faPlus} 
-                            size='1x'
-                        />
-                    </div>
-                </div>
+                <AddButton text="Add Transaction"/>
+
             </div>
             <div className="mt-10 flex">
                 <div className="w-1/2 flex flex-col items-center bg-pf-gray-100 z-10">

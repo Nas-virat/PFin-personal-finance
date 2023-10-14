@@ -42,9 +42,25 @@ func (h accountHandler) CreateAccountHandler(c *fiber.Ctx) error {
 			"message": "insert successfully",
 			"data": accountResponse,
 	})
-
 }
 
+func (h accountHandler) GetAccountsHandler(c *fiber.Ctx) error {
+
+	accounts, err := h.accSrv.GetAccounts()
+
+	if err != nil{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status": "fail", 
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
+		"status": "success",
+		"message": "get all accounts",
+		"data": accounts,
+	})
+}
 
 
 

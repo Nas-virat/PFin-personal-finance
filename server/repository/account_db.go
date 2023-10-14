@@ -25,11 +25,24 @@ func (repo *accountRepositoryDB) CreateAccount(account model.Account) (*model.Ac
 }
 
 func (repo *accountRepositoryDB) GetAccountById(id int) (*model.Account, error) {
+	
 	account := model.Account{}
 	err := repo.db.Where("id = ?", id).First(&account).Error
 	if err != nil {
 		return nil, err
 	}
 	return &account, nil
+}
+
+func (repo *accountRepositoryDB) GetAccounts() ([]model.Account, error){
+
+	accounts := []model.Account{}
+
+	err := repo.db.Find(&accounts).Error
+	if err != nil{
+		return nil, err
+	}
+
+	return accounts, nil
 }
 

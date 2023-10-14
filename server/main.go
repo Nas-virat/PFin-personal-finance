@@ -4,16 +4,14 @@ import (
 	"fmt"
 	"strings"
 	"time"
-
 	"github.com/Nas-virat/PFin-personal-finance/constant"
 	"github.com/Nas-virat/PFin-personal-finance/db"
-	"github.com/Nas-virat/PFin-personal-finance/handlers"
 	"github.com/Nas-virat/PFin-personal-finance/log"
-	"github.com/Nas-virat/PFin-personal-finance/repository"
-	"github.com/Nas-virat/PFin-personal-finance/service"
+	"github.com/Nas-virat/PFin-personal-finance/router"
 	"github.com/Nas-virat/PFin-personal-finance/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -23,44 +21,51 @@ import (
 
 func main() {
 
-	logger := log.NewLogger()
+	logg := log.NewLogger()
 
 	// Initialize Timezone
 	initTimeZone()
-	logger.Info("Initialized timezone")
+	logg.Info("Initialized timezone")
 
 	// Initialize config
 	initConfig()
-	logger.Info("Initialized config")
+	logg.Info("Initialized config")
 
 	db := initDB()
-	logger.Info("Initialized database")
+	logg.Info("Initialized database")
 	
 	// Migrate the schema
 	utils.Migration(db)
-	logger.Info("Migrated the schema")
+	logg.Info("Migrated the schema")
 
 
 
 	if constant.IsDevelopment {
-		logger.Warn("Running in development mode")
+		logg.Warn("Running in development mode")
 	}
 	
 	app := fiber.New()
-	app.Use(cors.New())
-	logger.Info("Initialized fiber")
-
-
-	accountRepositoryDB := repository.NewAccountRepositoryDB(db)
-	accountService := service.NewAccountService(accountRepositoryDB)
-	accountHandler := handlers.NewAccountHandler(accountService)
-
+	app.Use(logger.New())
+	app.Use(cors.New(
+		cors.Config{
+			AllowOrigins: "*",
+			AllowHeaders: "Origin, Content-Type, Accept",
+		},
+	))
+	logg.Info("Initialized fiber")
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("root")
 	})
 
-	app.Get("/createaccount",accountHandler.CreateAccountHandler)
+	router.SetupAccountRoutes(app, db)
+
+
+	// handle unavailable route
+	app.Use(func(c *fiber.Ctx) error {
+		return c.SendStatus(404) // => 404 "Not Found"
+	   })
+
 
 	app.Listen(":8000")
 }

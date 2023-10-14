@@ -14,6 +14,7 @@ type Account struct {
 	Amount 		float64 `gorm:"not null"`
 	Description string
 	Currency 	string 	`gorm:"not null"`
+	Status		bool 	`gorm:"default:true"`
 }
 
 type NewAccountRequest struct{
@@ -29,5 +30,5 @@ type AccountResponse struct{
 	Opendate 	time.Time 	`json:"opendate"`
 	Type 		string  	`json:"account_type"`
 	Amount      float64 	`json:"amount"`
-	Status bool
+	Status 		bool
 }

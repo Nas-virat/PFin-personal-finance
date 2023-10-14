@@ -44,6 +44,9 @@ func (s accountService) CreateAccount(account model.NewAccountRequest) (*model.A
 	response := model.AccountResponse{
 		AccountID: int(createAccount.ID),
 		Opendate:  createAccount.CreatedAt,
+		Type:	  createAccount.Type,
+		Amount:   createAccount.Amount,
+		Status:   true,
 	}
 
 	return &response, nil
@@ -54,5 +57,25 @@ func (s accountService) GetAccountById(accountID int) (*model.AccountResponse, e
 }
 
 func (s accountService) GetAccounts() ([]model.AccountResponse, error) {
+
+	accounts, err := s.accRepo.GetAccounts()
+	if err != nil{
+		return nil, errs.NewUnexpectedError()
+	}
+
+	accountResponse := []model.AccountResponse{}
+
+	for _, v := range accounts{
+		accountResponse = append(accountResponse, 
+			model.AccountResponse{
+				AccountID: int(v.ID),
+				Opendate: v.CreatedAt,
+				Type: v.Type,
+				Amount: v.Amount,
+				Status: v.Status,
+			},
+		)
+	}
+
 	return nil, nil
 }

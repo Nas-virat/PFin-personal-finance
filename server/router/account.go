@@ -20,4 +20,5 @@ func SetupAccountRoutes(app *fiber.App, db *gorm.DB) {
  v1 := api.Group("/account")
  // routes
  v1.Post("/create", accountHandler.CreateAccountHandler)
+ v1.Get("/getaccounts", accountHandler.GetAccountsHandler)
 }

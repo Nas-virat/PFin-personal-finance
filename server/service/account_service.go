@@ -16,7 +16,7 @@ func NewAccountService(accRepo repository.AccountRepository) AccountService {
 	return accountService{accRepo: accRepo}
 }
 
-func (s accountService) CreateAccount(account model.NewAccountRequest) (*model.AccountResponse, error) {
+func (s accountService) CreateAccount(account model.NewAccountRequest) (*model.NewAccountResponse, error) {
 
 	// check account is negative or not
 	if account.Amount < 0 {
@@ -41,7 +41,7 @@ func (s accountService) CreateAccount(account model.NewAccountRequest) (*model.A
 		return nil, errs.NewUnexpectedError()
 	}
 
-	response := model.AccountResponse{
+	response := model.NewAccountResponse{
 		AccountID: int(createAccount.ID),
 		Opendate:  createAccount.CreatedAt,
 		Type:	  createAccount.Type,
@@ -53,7 +53,21 @@ func (s accountService) CreateAccount(account model.NewAccountRequest) (*model.A
 }
 
 func (s accountService) GetAccountById(accountID int) (*model.AccountResponse, error) {
-	return nil, nil
+
+	account, err := s.accRepo.GetAccountById(accountID)
+
+	if err != nil {
+		return nil, errs.NewUnexpectedError()
+	}
+	accountRespone := model.AccountResponse{
+		AccountName: account.AccountName,
+		Type: account.Type,
+		Amount: account.Amount,
+		Description: account.Description,
+		Status: account.Status,
+	}
+
+	return &accountRespone, nil
 }
 
 func (s accountService) GetAccounts() ([]model.AccountResponse, error) {
@@ -63,19 +77,19 @@ func (s accountService) GetAccounts() ([]model.AccountResponse, error) {
 		return nil, errs.NewUnexpectedError()
 	}
 
-	accountResponse := []model.AccountResponse{}
+	accountResponses := []model.AccountResponse{}
 
-	for _, v := range accounts{
-		accountResponse = append(accountResponse, 
+	for _, account := range accounts{
+		accountResponses = append(accountResponses, 
 			model.AccountResponse{
-				AccountID: int(v.ID),
-				Opendate: v.CreatedAt,
-				Type: v.Type,
-				Amount: v.Amount,
-				Status: v.Status,
+				AccountName: account.AccountName,
+				Type: account.Type,
+				Amount: account.Amount,
+				Description: account.Description,
+				Status: account.Status,
 			},
 		)
 	}
 
-	return nil, nil
+	return accountResponses, nil
 }

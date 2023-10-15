@@ -6,9 +6,9 @@ import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { FormControl, InputLabel } from '@mui/material';
 import { postCreateAccount } from '@/app/lib/account';
-import { getPost } from '@/app/lib/test';
-
-
+import Toast from '@/components/Alert';
+import Swal from 'sweetalert2';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -17,6 +17,8 @@ export default function Page() {
     const [accountName, setAccountName] = useState('');
     const [description, setDescription] = useState('');
     const [balance, setBalance] = useState(0);
+
+    const router = useRouter()
 
     const handleChange = (event: SelectChangeEvent) => {
         setType(event.target.value as string);
@@ -30,9 +32,20 @@ export default function Page() {
             type,
             balance
         );
-        console.log(res);
-        if (res.status === 200) {
-            alert('Account Created');
+        console.log(res.status);
+        if (res.status === 'success') {
+            Toast.fire({
+                icon: 'success',
+                title: 'Signed in successfully'
+            })
+            router.push('/setting');
+        }
+        else if(res.status === 'fail'){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: res.data.message,
+            })
         }
     };
 

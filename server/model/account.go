@@ -25,10 +25,18 @@ type NewAccountRequest struct{
 	Currency 	string 	`json:"currency"`
 }
 
-type AccountResponse struct{
+type NewAccountResponse struct{
 	AccountID 	int 		`json:"account_id"`
 	Opendate 	time.Time 	`json:"opendate"`
 	Type 		string  	`json:"account_type"`
 	Amount      float64 	`json:"amount"`
-	Status 		bool
+	Status 		bool		`json:"status"`
+}
+
+type AccountResponse struct{
+	AccountName string 		`json:"account_name"`
+	Type 		string  	`json:"account_type"`
+	Amount      float64 	`json:"amount"`
+	Description string  	`json:"description"`
+	Status 		bool		`json:"status"`
 }

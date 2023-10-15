@@ -21,8 +21,6 @@ export async function postCreateAccount(
             }),
         });
 
-        console.log('Response:', res);
-
         if (!res.ok) {
             throw new Error(`Failed to create account. Status: ${res.status}`);
         }

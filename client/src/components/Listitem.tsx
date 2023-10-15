@@ -2,10 +2,11 @@
 interface ListitemProps {
     accountname: string;
     balance: number;
+    description: string;
 }
 
 
-export const Listitem = ({accountname,balance}: ListitemProps) =>{
+export const Listitem = ({accountname,balance,description}: ListitemProps) =>{
     return(
         <div className='flex justify-between items-center'>
             <div className='flex justify-between items-center'>
@@ -14,7 +15,7 @@ export const Listitem = ({accountname,balance}: ListitemProps) =>{
                 </div>
                 <div className='ml-5'>
                     <p className='text-pf-gray-900 font-bold text-2xl'>{accountname}</p>
-                    <p className='text-pf-gray-900 font-normal text-2xl'>Account Number</p>
+                    <p className='text-pf-gray-900 font-normal text-2xl'>{description}</p>
                 </div>
             </div>
             <div className='flex justify-between items-center'>

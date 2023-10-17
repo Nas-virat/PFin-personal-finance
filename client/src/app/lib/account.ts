@@ -1,11 +1,11 @@
 
 
-export async function postCreateAccount(
+const postCreateAccount = async (
     account_name: string,
     description: string,
     account_type: string,
     amount: number,
-) {
+) => {
     try {
         const res = await fetch('http://localhost:8000/api/account/create', {
             method: 'POST',
@@ -32,3 +32,5 @@ export async function postCreateAccount(
         throw error;
     }
 }
+
+export { postCreateAccount };

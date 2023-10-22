@@ -7,7 +7,7 @@ import (
 )
 
 
-type accountHandler struct{
+type accountHandler struct {
 	accSrv service.AccountService
 }
 

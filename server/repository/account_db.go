@@ -10,6 +10,7 @@ type accountRepositoryDB struct {
 }
 
 
+// Constructor
 func NewAccountRepositoryDB(db *gorm.DB) AccountRepository {
 	return &accountRepositoryDB{db}
 }

@@ -58,7 +58,8 @@ func main() {
 		return c.SendString("root")
 	})
 
-	router.SetupAccountRoutes(app, db)
+	router.SetupAccountRoutes(app,db)
+	router.SetupTransactionRoute(app,db)
 
 
 	// handle unavailable route

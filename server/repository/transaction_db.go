@@ -76,21 +76,21 @@ func (r transactionRepositoryDB) UpdateTransaction(id uint, newInfo model.Transa
 
 }
 
-func (r transactionRepositoryDB) DeleteTransaction(id uint) (*model.Transaction, error) {
+func (r transactionRepositoryDB) DeleteTransaction(id uint) error {
 
 	transaction := model.Transaction{}
 
 	result := r.db.Find(&transaction, id)
 
 	if result.Error != nil {
-		return nil, result.Error
+		return result.Error
 	}
 
 	result = r.db.Delete(&transaction, id)
 
 	if result.Error != nil {
-		return nil, result.Error
+		return result.Error
 	}
 
-	return nil, nil
+	return  nil
 }

@@ -8,5 +8,5 @@ type TransactionRepository interface{
 	GetTransactionByID(id uint) (*model.Transaction,error)
 	GetTransactions() ([]model.Transaction,error)
 	UpdateTransaction(id uint,newInfo model.Transaction) (*model.Transaction,error)
-	DeleteTransaction(id uint) (*model.Transaction,error) 
+	DeleteTransaction(id uint) error 
 }

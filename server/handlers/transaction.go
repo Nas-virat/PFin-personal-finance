@@ -88,3 +88,67 @@ func (h transactionHandler) GetTransactionByIDHandler(c *fiber.Ctx) error {
 		"data": transactionResponse,
 	})
 }
+
+func (h transactionHandler) UpdateTransactionHandler(c *fiber.Ctx) error {
+	
+	id, err := c.ParamsInt("id")
+
+	if err != nil || id < 0{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status": "fail", 
+			"message": err.Error(),
+		})
+	}
+
+	request := model.NewTransactionRequest{}
+
+	err = c.BodyParser(&request)
+
+	if err != nil{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status": "fail",
+			"message": err.Error(),
+		})
+	}
+
+	transactionResponse, err := h.transactionSrv.UpdateTransaction(uint(id), request)
+
+	if err != nil{
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
+			"status": "fail", 
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
+		"status": "success", 
+		"message": "Update Transaction with ID",
+		"data": transactionResponse,
+	})
+}
+
+func (h transactionHandler) DeleteTransactionHandler(c *fiber.Ctx) error {
+	
+	id, err := c.ParamsInt("id")
+
+	if err != nil || id < 0{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status": "fail", 
+			"message": err.Error(),
+		})
+	}
+
+	err = h.transactionSrv.DeleteTransaction(uint(id))
+
+	if err != nil{
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
+			"status": "fail", 
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
+		"status": "success", 
+		"message": "Delete Transaction with ID",
+	})
+}

@@ -8,6 +8,6 @@ type TransactionService interface {
 	CreateTransaction(transaction model.NewTransactionRequest) (*model.TransactionResponse, error)
 	GetTransactionByID(id uint) (*model.TransactionResponse, error)
 	GetTransactions() ([]model.TransactionResponse, error)
-	UpdateTransaction(id uint, newInfo model.Transaction) (*model.TransactionResponse, error)
-	DeleteTransaction(id uint) (*model.TransactionResponse, error)
+	UpdateTransaction(id uint, newInfo model.NewTransactionRequest) (*model.TransactionResponse, error)
+	DeleteTransaction(id uint) error
 }

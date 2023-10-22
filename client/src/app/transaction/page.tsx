@@ -61,7 +61,8 @@ export default function Page() {
         { type: 'expense', name: 'Internet' },
         { type: 'expense', name: 'Electricity' },
         { type: 'expense', name: 'Water' },
-        { type: 'other', name: 'other' },
+        { type: 'credit', name: 'Credit Card' },
+        { type: 'other', name: 'Other' },
     ];
 
     const filteredCategories = categories.filter(item => item.type === transactionType);

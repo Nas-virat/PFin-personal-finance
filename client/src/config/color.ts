@@ -11,4 +11,20 @@ const tableau10Colors = [
     '#bab0ac'
 ];
 
-export default tableau10Colors;
+const revenueColors = [
+    '#59a14f',
+    '#76b7b2',
+    '#4e79a7',
+    '#edc948',
+    '#b07aa1',
+];
+
+const expenseColors = [
+    '#e15759',
+    '#f28e2b',
+    '#ff9da7',
+    '#9c755f',
+    '#bab0ac'
+];
+
+export {tableau10Colors, revenueColors, expenseColors};

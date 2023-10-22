@@ -50,6 +50,19 @@ func (r transactionRepositoryDB) GetTransactions() ([]model.Transaction, error) 
 	return transactions, nil
 }
 
+func (r transactionRepositoryDB) GetTransactionInRanageMonthYear(month, year int) ([]model.Transaction, error) {
+
+	transactions := []model.Transaction{}
+
+	err := r.db.Where("extract(month from created_at) = ? AND extract(year from created_at) = ?", month, year).Find(&transactions).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return transactions, nil
+}
+
 func (r transactionRepositoryDB) UpdateTransaction(id uint, newInfo model.Transaction) (*model.Transaction, error) {
 	transaction := model.Transaction{}
 
@@ -63,7 +76,7 @@ func (r transactionRepositoryDB) UpdateTransaction(id uint, newInfo model.Transa
 	// update the transaction
 	result = r.db.Model(&transaction).Updates(model.Transaction{
 		TransactionType: newInfo.TransactionType,
-		Catergory:       newInfo.Catergory,
+		Category:        newInfo.Category,
 		Description:     newInfo.Description,
 		Amount:          newInfo.Amount,
 	})
@@ -92,5 +105,5 @@ func (r transactionRepositoryDB) DeleteTransaction(id uint) error {
 		return result.Error
 	}
 
-	return  nil
+	return nil
 }

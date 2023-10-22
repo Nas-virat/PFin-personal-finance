@@ -2,7 +2,7 @@ import React from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 
-import tableau10Colors from '@/config/color';
+import {tableau10Colors, revenueColors, expenseColors} from '@/config/color';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -41,7 +41,7 @@ const options = {
 };
 
 
-export const DoughnutChart = ({data,labels}: DoughnutChartInterface) => {
+export const DoughnutChart = ({data,labels,backgroundColor}: DoughnutChartInterface) => {
   
   const chartdata = {
     labels: labels,
@@ -49,8 +49,8 @@ export const DoughnutChart = ({data,labels}: DoughnutChartInterface) => {
       {
         label: 'Amount',
         data: data,
-        backgroundColor: tableau10Colors,
-        borderColor: tableau10Colors,
+        backgroundColor: backgroundColor,
+        borderColor: backgroundColor,
         borderWidth: 1,
       },
     ],

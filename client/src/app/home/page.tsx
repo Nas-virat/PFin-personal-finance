@@ -1,5 +1,5 @@
 "use client";
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -13,13 +13,39 @@ import { Card } from '@/components/Card';
 import { DoughnutChart } from '@/components/chart/DoughnutChart';
 import { AddButton } from '@/components/Addbutton';
 import { useRouter } from 'next/navigation';
+import { getTransactionsByMonthYear } from '../lib/transaction';
+import { expenseColors, revenueColors } from '@/config/color';
+import exp from 'constants';
 
 
 export default function Page() {
 
     const [date, setDate] = useState<Dayjs>(dayjs());
+    const [transactions, setTransactions] = useState<any[]>([]);
+    const [totalRevenue, setTotalRevenue] = useState<number>(0);
+    const [totalExpense, setTotalExpense] = useState<number>(0);
+    const [totalRemaining, setTotalRemaining] = useState<number>(0);
+    const [totalCredit, setTotalCredit] = useState<number>(0);
 
     const router = useRouter()
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await getTransactionsByMonthYear(date.month()+1, date.year());
+                console.log(res);
+                setTotalRevenue(res.data.total_revenue);
+                setTotalExpense(res.data.total_expense);
+                setTotalRemaining(res.data.total_remaining);
+                setTotalCredit(res.data.total_credit);
+                setTransactions(res.data.transactions);
+            } catch (error) {
+                console.error('An error occurred while fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, [date]);
 
     return (
         <div>
@@ -53,10 +79,10 @@ export default function Page() {
                 <div className="w-1/2 flex flex-col items-center bg-pf-gray-100 z-10">
                     <RemainingCard
                         date={date.format('MMMM YYYY').toString()}
-                        revenue={12000}
-                        expense={5000}
-                        remaining={7000}
-                        credit={1000} 
+                        revenue={totalRevenue}
+                        expense={totalExpense}
+                        remaining={totalRemaining}
+                        credit={totalCredit} 
                     />
                     <BalanceChart  
                         equity={5000}
@@ -68,15 +94,17 @@ export default function Page() {
                         <p className="text-pf-gray-100 font-bold text-3xl">Revenue</p>
                         <div className='w-full flex justify-center'>
                             <DoughnutChart 
-                                data={[12000,5000]}
-                                labels={['Food','Travel']}
+                                data={transactions.filter((transaction) => transaction.transaction_type === 'income').map((transaction) => transaction.amount)}
+                                labels={transactions.filter((transaction) => transaction.transaction_type === 'income').map((transaction) => transaction.category)}
+                                backgroundColor={revenueColors}
                             />
                         </div>
                         <p className="text-pf-gray-100 font-bold text-3xl">Expense</p>
                         <div className='w-full flex justify-center'>
                             <DoughnutChart 
-                                data={[12000,5000]}
-                                labels={['Food','Travel']}
+                                data={transactions.filter((transaction) => transaction.transaction_type === 'expense').map((transaction) => transaction.amount)}
+                                labels={transactions.filter((transaction) => transaction.transaction_type === 'expense').map((transaction) => transaction.category)}
+                                backgroundColor={expenseColors}
                             />
                         </div>
                     </Card>

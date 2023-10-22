@@ -1,8 +1,9 @@
 
 
+
 const createTransaction = async (
     transaction_type : string,
-    catergory: string,
+    category: string,
     description: string,
     amount: number,
 ) => {
@@ -14,7 +15,7 @@ const createTransaction = async (
             },
             body: JSON.stringify({
                 "transaction_type": transaction_type,
-                "catergory":catergory,
+                "category":category,
                 "amount":amount,
                 "description":description,
             }),
@@ -31,5 +32,29 @@ const createTransaction = async (
         throw error;
     }
 }
+
+const getTransactionsByMonthYear = async (month: number, year: number) => {
+    try{
+        const res = await fetch(`http://localhost:8000/api/transaction/month/${month}/year/${year}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        if (!res.ok) {
+            throw new Error(`Failed to get transactions. Status: ${res.status}`);
+        }
+
+        const data = await res.json();
+        return data;
+    }
+    catch(error){
+        console.error('Error getting transactions:', error);
+        throw error;
+    }
+}
     
-export { createTransaction };
+export {    
+        createTransaction,
+        getTransactionsByMonthYear 
+    };

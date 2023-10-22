@@ -32,7 +32,7 @@ export default function Page() {
             type,
             balance
         );
-        console.log(res.status);
+        
         if (res.status === 'success') {
             Toast.fire({
                 icon: 'success',

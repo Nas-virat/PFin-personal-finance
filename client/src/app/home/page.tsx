@@ -12,11 +12,14 @@ import { BalanceChart } from '@/components/chart/BalanceChart';
 import { Card } from '@/components/Card';
 import { DoughnutChart } from '@/components/chart/DoughnutChart';
 import { AddButton } from '@/components/Addbutton';
+import { useRouter } from 'next/navigation';
 
 
 export default function Page() {
 
     const [date, setDate] = useState<Dayjs>(dayjs());
+
+    const router = useRouter()
 
     return (
         <div>
@@ -40,7 +43,10 @@ export default function Page() {
                         </DemoContainer>
                     </LocalizationProvider>
                 </div>
-                <AddButton text="Add Transaction"/>
+                <AddButton 
+                    text="Add Transaction"
+                    func={() => router.push('/transaction')}
+                />
 
             </div>
             <div className="mt-10 flex">

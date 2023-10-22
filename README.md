@@ -8,6 +8,11 @@
 PFin is a personal-finance website created for user to track personal financial status include Revenue, Expense, Asset, Debt and etc. PFin allows user to add their financial record and view their financial status in a dashboard. 
 This project is developed by using [Next.js](https://nextjs.org/docs) as a frontend framework. PFin API server is built by using [Fiber](https://docs.gofiber.io/) as a backend framework. PFin is using [PostgreSQL](https://www.postgresql.org/docs/) as a database. Note that this project is just for learning purpose.
 
+<p align="center">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=nextjs,go,postgres" />
+  </a>
+</p>
 
 ## Table of Contents
 

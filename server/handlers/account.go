@@ -62,6 +62,13 @@ func (h accountHandler) GetAccountsHandler(c *fiber.Ctx) error {
 	})
 }
 
+func (h accountHandler) HealthCheck(c *fiber.Ctx) error {
+	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
+		"status": "success",
+		"message": "health check",
+	})
+}
+
 
 
 

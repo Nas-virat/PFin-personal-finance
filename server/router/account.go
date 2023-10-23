@@ -12,13 +12,14 @@ import (
 func SetupAccountRoutes(app *fiber.App, db *gorm.DB) {
  // grouping
 
- accountRepositoryDB := repository.NewAccountRepositoryDB(db)
- accountService := service.NewAccountService(accountRepositoryDB)
- accountHandler := handlers.NewAccountHandler(accountService)
+	accountRepositoryDB := repository.NewAccountRepositoryDB(db)
+	accountService := service.NewAccountService(accountRepositoryDB)
+	accountHandler := handlers.NewAccountHandler(accountService)
 
- api := app.Group("/api")
- v1 := api.Group("/account")
- // routes
- v1.Post("/create", accountHandler.CreateAccountHandler)
- v1.Get("/getaccounts", accountHandler.GetAccountsHandler)
+	api := app.Group("/api")
+	v1 := api.Group("/account")
+	// routes
+	v1.Get("/health", accountHandler.HealthCheck)
+	v1.Post("/create", accountHandler.CreateAccountHandler)
+	v1.Get("/getaccounts", accountHandler.GetAccountsHandler)
 }

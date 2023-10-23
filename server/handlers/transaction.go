@@ -189,3 +189,10 @@ func (h transactionHandler) DeleteTransactionHandler(c *fiber.Ctx) error {
 		"message": "Delete Transaction with ID",
 	})
 }
+
+func (h transactionHandler) HealthCheck(c *fiber.Ctx) error {
+	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
+		"status": "success",
+		"message": "health check",
+	})
+}

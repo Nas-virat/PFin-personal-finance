@@ -17,6 +17,7 @@ func SetupTransactionRoute(app *fiber.App, db *gorm.DB){
 	api := app.Group("/api")
  	v1 := api.Group("/transaction")
 
+	v1.Get("/health",transactionHandler.HealthCheck)
 	v1.Post("/create",transactionHandler.CreateTransactionHandler)
 	v1.Get("/all",transactionHandler.GetTransactionsHandler)
 	v1.Get("/month/:month/year/:year",transactionHandler.GetTransactionInRanageMonthYearHandler)

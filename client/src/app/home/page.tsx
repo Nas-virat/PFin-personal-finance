@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import { getTransactionsByMonthYear } from '../lib/transaction';
 import { expenseColors, revenueColors } from '@/config/color';
 import exp from 'constants';
+import { getSummaryBalance } from '../lib/balance';
 
 
 export default function Page() {
@@ -26,6 +27,8 @@ export default function Page() {
     const [totalExpense, setTotalExpense] = useState<number>(0);
     const [totalRemaining, setTotalRemaining] = useState<number>(0);
     const [totalCredit, setTotalCredit] = useState<number>(0);
+    const [totalDebt, setTotalDebt] = useState<number>(0);
+    const [totalEquity, setTotalEquity] = useState<number>(0);
 
     const router = useRouter()
 
@@ -39,6 +42,10 @@ export default function Page() {
                 setTotalRemaining(res.data.total_remaining);
                 setTotalCredit(res.data.total_credit);
                 setTransactions(res.data.transactions);
+                const responseSummary = await getSummaryBalance();
+                console.log(responseSummary);
+                setTotalDebt(responseSummary.data.total_debt);
+                setTotalEquity(responseSummary.data.total_asset - responseSummary.data.total_debt);
             } catch (error) {
                 console.error('An error occurred while fetching data:', error);
             }
@@ -85,8 +92,8 @@ export default function Page() {
                         credit={totalCredit} 
                     />
                     <BalanceChart  
-                        equity={5000}
-                        debt={1000}
+                        equity={totalEquity}
+                        debt={totalDebt}
                     />
                 </div>
                 <div className="w-1/2 flex bg-pf-gray-100">

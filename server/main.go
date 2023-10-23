@@ -60,6 +60,7 @@ func main() {
 
 	router.SetupAccountRoutes(app,db)
 	router.SetupTransactionRoute(app,db)
+	router.SetupBalanceRoutes(app,db)
 
 
 	// handle unavailable route

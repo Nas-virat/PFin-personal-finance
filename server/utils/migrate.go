@@ -7,6 +7,9 @@ import (
 
 func Migration(db *gorm.DB) {
 
-	db.AutoMigrate(&model.Account{})
-	db.AutoMigrate(&model.Transaction{})
+	db.AutoMigrate(
+		&model.Account{},
+		&model.Transaction{},
+		&model.Debt{},
+	)
 }

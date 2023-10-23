@@ -16,6 +16,8 @@ import { useRouter } from 'next/navigation';
 import { getTransactionsByMonthYear } from '../lib/transaction';
 import { expenseColors, revenueColors } from '@/config/color';
 import exp from 'constants';
+import { getSummaryBalance } from '../lib/balance';
+import { BalanceCard } from '@/components/BalanceCard';
 
 
 export default function Page() {
@@ -26,19 +28,22 @@ export default function Page() {
     const [totalExpense, setTotalExpense] = useState<number>(0);
     const [totalRemaining, setTotalRemaining] = useState<number>(0);
     const [totalCredit, setTotalCredit] = useState<number>(0);
+    const [account, setAccount] = useState<any[]>([]);
+    const [debt, setDebt] = useState<any[]>([]);
+    const [totalDebt, setTotalDebt] = useState<number>(0);
+    const [totalEquity, setTotalEquity] = useState<number>(0);
 
     const router = useRouter()
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await getTransactionsByMonthYear(date.month()+1, date.year());
-                console.log(res);
-                setTotalRevenue(res.data.total_revenue);
-                setTotalExpense(res.data.total_expense);
-                setTotalRemaining(res.data.total_remaining);
-                setTotalCredit(res.data.total_credit);
-                setTransactions(res.data.transactions);
+                const responseSummary = await getSummaryBalance();
+                console.log(responseSummary.data.debts);
+                setAccount(responseSummary.data.accounts);
+                setDebt(responseSummary.data.debts);
+                setTotalDebt(responseSummary.data.total_debt);
+                setTotalEquity(responseSummary.data.total_asset - responseSummary.data.total_debt);
             } catch (error) {
                 console.error('An error occurred while fetching data:', error);
             }
@@ -77,33 +82,33 @@ export default function Page() {
             </div>
             <div className="mt-10 flex">
                 <div className="w-1/2 flex flex-col items-center bg-pf-gray-100 z-10">
-                    <RemainingCard
-                        date={date.format('MMMM YYYY').toString()}
-                        revenue={totalRevenue}
-                        expense={totalExpense}
-                        remaining={totalRemaining}
-                        credit={totalCredit} 
+                    <BalanceCard
+                        date={date.format('MMMM YYYY')}
+                        asset={totalEquity+totalDebt}
+                        de={totalDebt/totalEquity}
+                        debt={totalDebt}
                     />
+
                     <BalanceChart  
-                        equity={5000}
-                        debt={1000}
+                        equity={totalEquity}
+                        debt={totalDebt}
                     />
                 </div>
                 <div className="w-1/2 flex bg-pf-gray-100">
                     <Card>
-                        <p className="text-pf-gray-100 font-bold text-3xl">Revenue</p>
+                        <p className="text-pf-gray-100 font-bold text-3xl">List of Asset</p>
                         <div className='w-full flex justify-center'>
                             <DoughnutChart 
-                                data={transactions.filter((transaction) => transaction.transaction_type === 'income').map((transaction) => transaction.amount)}
-                                labels={transactions.filter((transaction) => transaction.transaction_type === 'income').map((transaction) => transaction.category)}
+                                data={account.map((account) => account.Amount)}
+                                labels={account.map((account) => account.AccountName)}
                                 backgroundColor={revenueColors}
                             />
                         </div>
-                        <p className="text-pf-gray-100 font-bold text-3xl">Expense</p>
+                        <p className="text-pf-gray-100 font-bold text-3xl">List of Debt</p>
                         <div className='w-full flex justify-center'>
                             <DoughnutChart 
-                                data={transactions.filter((transaction) => transaction.transaction_type === 'expense').map((transaction) => transaction.amount)}
-                                labels={transactions.filter((transaction) => transaction.transaction_type === 'expense').map((transaction) => transaction.category)}
+                                data={debt.map((debt) => debt.Amount)}
+                                labels={debt.map((debt) => debt.DebtName)}
                                 backgroundColor={expenseColors}
                             />
                         </div>

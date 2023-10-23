@@ -50,7 +50,7 @@ func (r transactionRepositoryDB) GetTransactions() ([]model.Transaction, error) 
 	return transactions, nil
 }
 
-func (r transactionRepositoryDB) GetTransactionInRanageMonthYear(month, year int) ([]model.Transaction, error) {
+func (r transactionRepositoryDB) GetTransactionInRangeMonthYear(month, year int) ([]model.Transaction, error) {
 
 	transactions := []model.Transaction{}
 
@@ -61,6 +61,18 @@ func (r transactionRepositoryDB) GetTransactionInRanageMonthYear(month, year int
 	}
 
 	return transactions, nil
+}
+
+func (r transactionRepositoryDB) GetTransactionInRangeDayMonthYear(day,month,year int) ([]model.Transaction,error){
+	transactions := []model.Transaction{}
+
+	err := r.db.Where("extract(day from created_at) = ? AND extract(month from created_at) = ? AND extract(year from created_at) = ?", day,month,year).Find(&transactions).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return transactions,nil
 }
 
 func (r transactionRepositoryDB) UpdateTransaction(id uint, newInfo model.Transaction) (*model.Transaction, error) {

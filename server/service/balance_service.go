@@ -50,3 +50,32 @@ func (s balanceService) GetSummaryBalance()(*model.SummaryBalanceResponse, error
 
 	return &summaryBalance,nil
 }
+
+func (s balanceService) CreateDebt(debt model.NewDebtRequest)(*model.DebtResponse,error){
+
+	debtModel := model.Debt{
+		Name: debt.Name,
+		Amount: debt.Amount,
+		InterestRate: debt.InterestRate,
+		MinimumPayment: debt.MinimumPayment,
+		AccountID: debt.AccountID,
+	}
+	
+	result, err := s.balanceRepo.CreateDebt(debtModel)
+
+	if err != nil{
+		return nil, errs.NewUnexpectedError()
+	}
+
+	resultResponse := model.DebtResponse{
+		ID: result.ID,
+		Name: result.Name,
+		Amount: result.Amount,
+		InterestRate: result.InterestRate,
+		MinimumPayment: result.MinimumPayment,
+		AccountID: result.AccountID,
+	}
+
+	return &resultResponse, nil
+
+}

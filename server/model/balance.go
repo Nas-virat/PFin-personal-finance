@@ -14,7 +14,15 @@ type Debt struct{
 }
 
 type NewDebtRequest struct {
-	Id 				int 	`json:"id"`
+	Name 			string 	`json:"name"`
+	Amount 			float64 `json:"amount"`
+	InterestRate 	float64 `json:"interest_rate"`
+	MinimumPayment 	float64 `json:"minimum_payment"`
+	AccountID 		int 	`json:"account_id"`
+}
+
+type DebtResponse struct {
+	ID 				uint 	`json:"id"`
 	Name 			string 	`json:"name"`
 	Amount 			float64 `json:"amount"`
 	InterestRate 	float64 `json:"interest_rate"`

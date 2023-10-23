@@ -18,4 +18,5 @@ func SetupBalanceRoutes(app *fiber.App, db *gorm.DB) {
 
 	v1.Get("/health",balanceHandler.HealthCheck)
 	v1.Get("/summary",balanceHandler.GetSummaryBalanceHandler)
+	v1.Post("/debt",balanceHandler.CreateDebtHandler)
 }

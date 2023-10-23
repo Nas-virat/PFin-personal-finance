@@ -6,4 +6,5 @@ import(
 
 type BalanceService interface{
 	GetSummaryBalance()(*model.SummaryBalanceResponse, error)
+	CreateDebt(debt model.NewDebtRequest)(*model.DebtResponse,error)
 }

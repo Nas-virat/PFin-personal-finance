@@ -62,25 +62,25 @@ func (h transactionHandler) GetTransactionsHandler(c *fiber.Ctx) error {
 	})
 }
 
-func (h transactionHandler) GetTransactionInRanageMonthYearHandler(c *fiber.Ctx) error{
+func (h transactionHandler) GetTransactionInRangeMonthYearHandler(c *fiber.Ctx) error{
 
-	year, error := c.ParamsInt("year")
-	if error != nil {
+	year, err := c.ParamsInt("year")
+	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"status": "fail",
-			"message": error.Error(),
+			"message": err.Error(),
 		})
 	}
 
-	month, error := c.ParamsInt("month")
-	if error != nil {
+	month, err := c.ParamsInt("month")
+	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"status": "fail",
-			"message": error.Error(),
+			"message": err.Error(),
 		})
 	}
 
-	transactionSummaryResponses, err := h.transactionSrv.GetTransactionInRanageMonthYear(
+	transactionSummaryResponses, err := h.transactionSrv.GetTransactionInRangeMonthYear(
 		month,
 		year,
 	)
@@ -98,6 +98,53 @@ func (h transactionHandler) GetTransactionInRanageMonthYearHandler(c *fiber.Ctx)
 		"data"	 : transactionSummaryResponses,
 	})
 }
+
+func (h transactionHandler) GetTransactionInRangeDayMonthYearHandler(c *fiber.Ctx) error{
+
+	year, err := c.ParamsInt("year")
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status": "fail",
+			"message": err.Error(),
+		})
+	}
+
+	month, err := c.ParamsInt("month")
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status": "fail",
+			"message": err.Error(),
+		})
+	}
+
+	day, err := c.ParamsInt("day")
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status": "fail",
+			"message": err.Error(),
+		})
+	}
+
+	transactionSummaryResponses, err := h.transactionSrv.GetTransactionInRangeDayMonthYear(
+		day,
+		month,
+		year,
+	)
+
+	if err != nil{
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
+			"status": "fail", 
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
+		"status" : "success",
+		"message": "Get all transaction",
+		"data"	 : transactionSummaryResponses,
+	})
+}
+
 
 func (h transactionHandler) GetTransactionByIDHandler(c *fiber.Ctx) error {
 

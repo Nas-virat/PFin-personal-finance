@@ -37,8 +37,9 @@ PFin is using [PostgreSQL](https://www.postgresql.org/docs/) as a database. Note
 ```
 ### Run the frontend server
 ```
-    cd client
-    npm run dev
+    cd client 
+    npm install // install all dependencies
+    npm run dev // run the server
 ```
 
 ## Pages

@@ -33,6 +33,6 @@ type DebtResponse struct {
 type SummaryBalanceResponse struct {
 	TotalAsset	float64		`json:"total_asset"`
 	TotalDebt	float64		`json:"total_debt"`
-	Accounts 	[]Account	`json:"accounts"` // bank and investment account
+	Accounts 	[]AccountListResponse	`json:"accounts"` // bank and investment account
 	Debts    	[]Debt		`json:"debts"`	  	
 }

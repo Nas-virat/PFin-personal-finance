@@ -33,18 +33,26 @@ func (s balanceService) GetSummaryBalance()(*model.SummaryBalanceResponse, error
 	totalAsset 	:= 0.0
 	totalDebt	:= 0.0
 
+	AccountListResponse := []model.AccountListResponse{}
+
 	for _, account := range accounts{
 		totalAsset += float64(account.Amount)
+		AccountListResponse = append(AccountListResponse, model.AccountListResponse{
+			AccountName: account.AccountName,
+			Type: account.Type,
+			Amount: account.Amount,
+		})
 	}
 
 	for _, debt := range debts{
 		totalDebt += float64(debt.Amount)
 	}
 
+
 	summaryBalance := model.SummaryBalanceResponse{
 		TotalAsset: totalAsset,
 		TotalDebt: totalDebt,
-		Accounts: accounts,
+		Accounts: AccountListResponse,
 		Debts: debts,
 	}
 

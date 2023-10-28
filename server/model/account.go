@@ -40,3 +40,9 @@ type AccountResponse struct{
 	Description string  	`json:"description"`
 	Status 		bool		`json:"status"`
 }
+
+type AccountListResponse struct{
+	AccountName string 		`json:"account_name"`
+	Type 		string  	`json:"account_type"`
+	Amount      float64 	`json:"amount"`
+}

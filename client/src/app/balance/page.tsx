@@ -7,27 +7,20 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import dayjs, { Dayjs } from 'dayjs';
-import { RemainingCard } from '@/components/RemainingCard';
 import { BalanceChart } from '@/components/chart/BalanceChart';
 import { Card } from '@/components/Card';
 import { DoughnutChart } from '@/components/chart/DoughnutChart';
 import { AddButton } from '@/components/Addbutton';
 import { useRouter } from 'next/navigation';
-import { getTransactionsByMonthYear } from '../lib/transaction';
 import { expenseColors, revenueColors } from '@/config/color';
-import exp from 'constants';
 import { getSummaryBalance } from '../lib/balance';
 import { BalanceCard } from '@/components/BalanceCard';
+import { HeaderCard } from '@/components/HeaderCard';
 
 
 export default function Page() {
 
     const [date, setDate] = useState<Dayjs>(dayjs());
-    const [transactions, setTransactions] = useState<any[]>([]);
-    const [totalRevenue, setTotalRevenue] = useState<number>(0);
-    const [totalExpense, setTotalExpense] = useState<number>(0);
-    const [totalRemaining, setTotalRemaining] = useState<number>(0);
-    const [totalCredit, setTotalCredit] = useState<number>(0);
     const [account, setAccount] = useState<any[]>([]);
     const [debt, setDebt] = useState<any[]>([]);
     const [totalDebt, setTotalDebt] = useState<number>(0);
@@ -96,15 +89,21 @@ export default function Page() {
                 </div>
                 <div className="w-1/2 flex bg-pf-gray-100">
                     <Card>
-                        <p className="text-pf-gray-100 font-bold text-3xl">List of Asset</p>
+                        <HeaderCard
+                            text="List of Asset"
+                            func={() => router.push('/balance/asset')}
+                        />
                         <div className='w-full flex justify-center'>
                             <DoughnutChart 
-                                data={account.map((account) => account.Amount)}
-                                labels={account.map((account) => account.AccountName)}
+                                data={account.map((account) => account.amount)}
+                                labels={account.map((account) => account.account_name)}
                                 backgroundColor={revenueColors}
                             />
                         </div>
-                        <p className="text-pf-gray-100 font-bold text-3xl">List of Debt</p>
+                        <HeaderCard
+                            text="List of Debt"
+                            func={() => router.push('/balance/debt')}
+                        />
                         <div className='w-full flex justify-center'>
                             <DoughnutChart 
                                 data={debt.map((debt) => debt.Amount)}

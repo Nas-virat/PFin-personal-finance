@@ -122,8 +122,8 @@ export default function Page() {
                     <FormControl fullWidth variant="outlined" sx={{ marginBottom: '30px' }}>
                         <TextField
                             fullWidth
-                            id="accountBalance"
-                            label="Initial Balance"
+                            id="AmountTransaction"
+                            label="Amount"
                             type="number"
                             variant="outlined"
                             value={balance}

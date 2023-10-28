@@ -8,16 +8,18 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import dayjs, { Dayjs } from 'dayjs';
 import { RemainingCard } from '@/components/RemainingCard';
-import { BalanceChart } from '@/components/chart/BalanceChart';
 import { Card } from '@/components/Card';
 import { DoughnutChart } from '@/components/chart/DoughnutChart';
 import { AddButton } from '@/components/Addbutton';
 import { useRouter } from 'next/navigation';
-import { getTransactionsByMonthYear } from '../lib/transaction';
-import { getSummaryBalance } from '../lib/balance';
-import { expenseColors, revenueColors } from '@/config/color';
-import exp from 'constants';
+import { getTransactionsByDayMonthYear } from '../lib/transaction';
+import { expenseColors } from '@/config/color';
 
+import { TableInfo } from '@/components/TableInfo';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
+import { HeaderCard } from '@/components/HeaderCard';
 
 export default function Page() {
 
@@ -33,7 +35,7 @@ export default function Page() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await getTransactionsByMonthYear(date.month()+1, date.year());
+                const res = await getTransactionsByDayMonthYear(date.date(),date.month()+1, date.year());
                 setTotalRevenue(res.data.total_revenue);
                 setTotalExpense(res.data.total_expense);
                 setTotalRemaining(res.data.total_remaining);
@@ -56,8 +58,7 @@ export default function Page() {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={['DatePicker']}>
                             <DatePicker 
-                                label={'select year and month'} 
-                                views={['month', 'year']}
+                                label={'select day'} 
                                 defaultValue={dayjs()}
                                 value={date}
                                 onChange={(newValue: Dayjs | null) => {
@@ -78,29 +79,43 @@ export default function Page() {
             <div className="mt-10 flex">
                 <div className="w-1/2 flex flex-col items-center bg-pf-gray-100 z-10">
                     <RemainingCard
-                        date={date.format('MMMM YYYY').toString()}
+                        date={date.format('DD MMMM YYYY').toString()}
                         revenue={totalRevenue}
                         expense={totalExpense}
                         remaining={totalRemaining}
                         credit={totalCredit} 
                     />
-                </div>
-                <div className="w-1/2 flex bg-pf-gray-100">
                     <Card>
-                        <p className="text-pf-gray-100 font-bold text-3xl">Revenue</p>
-                        <div className='w-full flex justify-center'>
-                            <DoughnutChart 
-                                data={transactions.filter((transaction) => transaction.transaction_type === 'income').map((transaction) => transaction.amount)}
-                                labels={transactions.filter((transaction) => transaction.transaction_type === 'income').map((transaction) => transaction.category)}
-                                backgroundColor={revenueColors}
-                            />
-                        </div>
-                        <p className="text-pf-gray-100 font-bold text-3xl">Expense</p>
+                        <HeaderCard
+                            text="Expense"
+                            func={() => router.push('/transaction')}
+                        />
                         <div className='w-full flex justify-center'>
                             <DoughnutChart 
                                 data={transactions.filter((transaction) => transaction.transaction_type === 'expense').map((transaction) => transaction.amount)}
                                 labels={transactions.filter((transaction) => transaction.transaction_type === 'expense').map((transaction) => transaction.category)}
                                 backgroundColor={expenseColors}
+                            />
+                        </div>
+                    </Card>
+                </div>
+                <div className="w-1/2 flex bg-pf-gray-100">
+                    <Card>
+                        <HeaderCard
+                            text="List of Expense"
+                            func={() => router.push('/transaction')}
+                        />
+                        <div className='w-full flex justify-center'>
+                            <TableInfo 
+                                columns={['Transaction', 'Amount']}
+                                data={transactions
+                                    .filter((transaction) => transaction.transaction_type === 'expense')
+                                    .map((transaction) => (
+                                        {
+                                            category: transaction.category, 
+                                            amount: transaction.amount}
+                                        ))}
+                                total={totalExpense}
                             />
                         </div>
                     </Card>

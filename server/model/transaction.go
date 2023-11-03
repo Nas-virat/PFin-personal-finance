@@ -16,7 +16,7 @@ type Transaction struct {
 
 type NewTransactionRequest struct {
 	TransactionType string  `json:"transaction_type"`
-	Category       string  `json:"category"`
+	Category       	string  `json:"category"`
 	Description     string  `json:"description"`
 	Amount          float64 `json:"amount"`
 }
@@ -34,5 +34,11 @@ type TransactionSummaryResponse struct {
 	TotalExpense   float64               `json:"total_expense"`
 	TotalCredit    float64               `json:"total_credit"`
 	TotalRemaining float64               `json:"total_remaining"`
-	Transactions   []TransactionResponse `json:"transactions"`
+	Transactions   []TransactionSummaryCategoryResponse `json:"transactions"`
+}
+
+type TransactionSummaryCategoryResponse struct {
+	TransactionType string  	`json:"transaction_type"`
+	Category       	string  	`json:"category"`
+	Amount          float64   	`json:"amount"`
 }

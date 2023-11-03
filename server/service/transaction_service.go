@@ -105,24 +105,25 @@ func (s transactionService) GetTransactionInRangeMonthYear(month, year int) (*mo
 		return nil, errs.NewUnexpectedError()
 	}
 
-	transactionResponses := []model.TransactionResponse{}
-
-	for _, transaction := range transactions {
-		transactionResponses = append(transactionResponses,
-			model.TransactionResponse{
-				CreateAt:        transaction.CreatedAt,
-				TransactionType: transaction.TransactionType,
-				Category:        transaction.Category,
-				Description:     transaction.Description,
-				Amount:          transaction.Amount,
-			},
-		)
-	}
+	transactionCategoryResponse := []model.TransactionSummaryCategoryResponse{}
 
 	//calculate Total Revenue, Total Expense, Total Credit, Total Remaining
 	var totalRevenue, totalExpense, totalCredit float64
 
-	for _, transaction := range transactionResponses {
+	categoryAmountMap := make(map[string]float64)
+	categoryTypeMap := make(map[string]string)
+
+	for _, transaction := range transactions {
+
+		//check category is exist in map
+		if _, ok := categoryAmountMap[transaction.Category]; !ok {
+			categoryAmountMap[transaction.Category] = 0
+			categoryTypeMap[transaction.Category] = transaction.TransactionType
+		}
+
+		//add amount to category
+		categoryAmountMap[transaction.Category] += transaction.Amount
+
 		if transaction.TransactionType == "income" {
 			totalRevenue += transaction.Amount
 		} else if transaction.TransactionType == "expense" {
@@ -132,12 +133,22 @@ func (s transactionService) GetTransactionInRangeMonthYear(month, year int) (*mo
 		}
 	}
 
+	for category, amount := range categoryAmountMap {
+		transactionCategoryResponse = append(transactionCategoryResponse,
+			model.TransactionSummaryCategoryResponse{
+				Category: category,
+				TransactionType: categoryTypeMap[category],
+				Amount: amount,
+			},
+		)
+	}
+
 	transactionSummaryResponses := model.TransactionSummaryResponse{
 		TotalRevenue:   totalRevenue,
 		TotalExpense:   totalExpense,
 		TotalCredit:    totalCredit,
 		TotalRemaining: totalRevenue - totalExpense,
-		Transactions:   transactionResponses,
+		Transactions:   transactionCategoryResponse,
 	}
 
 	return &transactionSummaryResponses, nil
@@ -158,24 +169,26 @@ func (s transactionService) GetTransactionInRangeDayMonthYear(day, month, year i
 		return nil, errs.NewUnexpectedError()
 	}
 
-	transactionResponses := []model.TransactionResponse{}
 
-	for _, transaction := range transactions {
-		transactionResponses = append(transactionResponses,
-			model.TransactionResponse{
-				CreateAt:        transaction.CreatedAt,
-				TransactionType: transaction.TransactionType,
-				Category:        transaction.Category,
-				Description:     transaction.Description,
-				Amount:          transaction.Amount,
-			},
-		)
-	}
+	transactionCategoryResponse := []model.TransactionSummaryCategoryResponse{}
 
 	//calculate Total Revenue, Total Expense, Total Credit, Total Remaining
 	var totalRevenue, totalExpense, totalCredit float64
 
-	for _, transaction := range transactionResponses {
+	categoryAmountMap := make(map[string]float64)
+	categoryTypeMap := make(map[string]string)
+
+	for _, transaction := range transactions {
+
+		//check category is exist in map
+		if _, ok := categoryAmountMap[transaction.Category]; !ok {
+			categoryAmountMap[transaction.Category] = 0
+			categoryTypeMap[transaction.Category] = transaction.TransactionType
+		}
+
+		//add amount to category
+		categoryAmountMap[transaction.Category] += transaction.Amount
+
 		if transaction.TransactionType == "income" {
 			totalRevenue += transaction.Amount
 		} else if transaction.TransactionType == "expense" {
@@ -185,12 +198,22 @@ func (s transactionService) GetTransactionInRangeDayMonthYear(day, month, year i
 		}
 	}
 
+	for category, amount := range categoryAmountMap {
+		transactionCategoryResponse = append(transactionCategoryResponse,
+			model.TransactionSummaryCategoryResponse{
+				Category: category,
+				TransactionType: categoryTypeMap[category],
+				Amount: amount,
+			},
+		)
+	}
+
 	transactionSummaryResponses := model.TransactionSummaryResponse{
 		TotalRevenue:   totalRevenue,
 		TotalExpense:   totalExpense,
 		TotalCredit:    totalCredit,
 		TotalRemaining: totalRevenue - totalExpense,
-		Transactions:   transactionResponses,
+		Transactions:   transactionCategoryResponse,
 	}
 
 	return &transactionSummaryResponses, nil

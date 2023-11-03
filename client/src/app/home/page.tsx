@@ -15,8 +15,17 @@ import { AddButton } from '@/components/Addbutton';
 import { useRouter } from 'next/navigation';
 import { getTransactionsByMonthYear } from '../lib/transaction';
 import { expenseColors, revenueColors } from '@/config/color';
-import exp from 'constants';
 import { getSummaryBalance } from '../lib/balance';
+
+
+const calculateCategorySum = (transactions: any[],) => {
+    const categorySum = transactions.reduce((acc, transaction) => {
+        const { category, amount } = transaction;
+        acc[category] = (acc[category] || 0) + amount;
+        return acc;
+      }, {});
+    return categorySum;
+}
 
 
 export default function Page() {
@@ -36,14 +45,12 @@ export default function Page() {
         const fetchData = async () => {
             try {
                 const res = await getTransactionsByMonthYear(date.month()+1, date.year());
-                console.log(res);
                 setTotalRevenue(res.data.total_revenue);
                 setTotalExpense(res.data.total_expense);
                 setTotalRemaining(res.data.total_remaining);
                 setTotalCredit(res.data.total_credit);
                 setTransactions(res.data.transactions);
                 const responseSummary = await getSummaryBalance();
-                console.log(responseSummary);
                 setTotalDebt(responseSummary.data.total_debt);
                 setTotalEquity(responseSummary.data.total_asset - responseSummary.data.total_debt);
             } catch (error) {

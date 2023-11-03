@@ -17,8 +17,6 @@ import { expenseColors } from '@/config/color';
 
 import { TableInfo } from '@/components/TableInfo';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
 import { HeaderCard } from '@/components/HeaderCard';
 
 export default function Page() {

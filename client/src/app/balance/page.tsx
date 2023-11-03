@@ -32,7 +32,7 @@ export default function Page() {
         const fetchData = async () => {
             try {
                 const responseSummary = await getSummaryBalance();
-                console.log(responseSummary.data.debts);
+
                 setAccount(responseSummary.data.accounts);
                 setDebt(responseSummary.data.debts);
                 setTotalDebt(responseSummary.data.total_debt);

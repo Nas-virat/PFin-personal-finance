@@ -113,12 +113,14 @@ export const  BalanceChart = ({
   };
   return (
     <Card>
-      <Bar 
-          options={options} 
-          data={data} 
-          height={400}
-          width={800}
-      />
+      <div className='py-5'>
+        <Bar 
+            options={options} 
+            data={data} 
+            height={480}
+            width={800}
+        />
+      </div>
     </Card>
   );
 }

@@ -7,7 +7,7 @@ export const Card = ({
     children: React.ReactNode
   }) => {
     return (
-        <div className="w-11/12 mx-1 mb-4 p-9 bg-pf-gray-900 rounded-xl">
+        <div className="w-full mx-1 mb-4 p-9 bg-pf-gray-900 rounded-xl">
             {children}
         </div>
     );

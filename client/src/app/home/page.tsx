@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import { getTransactionsByMonthYear } from '../lib/transaction';
 import { expenseColors, revenueColors } from '@/config/color';
 import { getSummaryBalance } from '../lib/balance';
+import { BarChart } from '@/components/chart/BarChart';
 
 
 const calculateCategorySum = (transactions: any[],) => {
@@ -89,41 +90,54 @@ export default function Page() {
                 />
 
             </div>
-            <div className="mt-10 flex">
-                <div className="w-1/2 flex flex-col items-center bg-pf-gray-100 z-10">
-                    <RemainingCard
-                        date={date.format('MMMM YYYY').toString()}
-                        revenue={totalRevenue}
-                        expense={totalExpense}
-                        remaining={totalRemaining}
-                        credit={totalCredit} 
-                    />
-                    <BalanceChart  
-                        equity={totalEquity}
-                        debt={totalDebt}
-                    />
+            <div className='w-full mt-10 px-5 flex flex-col justify-center items-center'>
+                <div className="w-full flex justify-center">
+                    <div className="w-1/2 flex flex-col items-center justify-between bg-pf-gray-100 z-10">
+                        <RemainingCard
+                            date={date.format('MMMM YYYY').toString()}
+                            revenue={totalRevenue}
+                            expense={totalExpense}
+                            remaining={totalRemaining}
+                            credit={totalCredit} 
+                        />
+                        <BalanceChart  
+                            equity={totalEquity}
+                            debt={totalDebt}
+                        />
+                    </div>
+                    <div className="w-1/2 flex bg-pf-gray-100">
+                        <Card>
+                            <p className="text-pf-gray-100 font-bold text-3xl">Revenue</p>
+                            <div className='w-full flex justify-center'>
+                                <DoughnutChart 
+                                    data={transactions.filter((transaction) => transaction.transaction_type === 'income').map((transaction) => transaction.amount)}
+                                    labels={transactions.filter((transaction) => transaction.transaction_type === 'income').map((transaction) => transaction.category)}
+                                    backgroundColor={revenueColors}
+                                />
+                            </div>
+                            <p className="text-pf-gray-100 font-bold text-3xl">Expense</p>
+                            <div className='w-full flex justify-center'>
+                                <DoughnutChart 
+                                    data={transactions.filter((transaction) => transaction.transaction_type === 'expense').map((transaction) => transaction.amount)}
+                                    labels={transactions.filter((transaction) => transaction.transaction_type === 'expense').map((transaction) => transaction.category)}
+                                    backgroundColor={expenseColors}
+                                />
+                            </div>
+                        </Card>
+                    </div>
                 </div>
-                <div className="w-1/2 flex bg-pf-gray-100">
-                    <Card>
-                        <p className="text-pf-gray-100 font-bold text-3xl">Revenue</p>
-                        <div className='w-full flex justify-center'>
-                            <DoughnutChart 
-                                data={transactions.filter((transaction) => transaction.transaction_type === 'income').map((transaction) => transaction.amount)}
-                                labels={transactions.filter((transaction) => transaction.transaction_type === 'income').map((transaction) => transaction.category)}
-                                backgroundColor={revenueColors}
-                            />
-                        </div>
-                        <p className="text-pf-gray-100 font-bold text-3xl">Expense</p>
-                        <div className='w-full flex justify-center'>
-                            <DoughnutChart 
-                                data={transactions.filter((transaction) => transaction.transaction_type === 'expense').map((transaction) => transaction.amount)}
-                                labels={transactions.filter((transaction) => transaction.transaction_type === 'expense').map((transaction) => transaction.category)}
-                                backgroundColor={expenseColors}
-                            />
-                        </div>
-                    </Card>
-                </div>
+                <Card>
+                    <BarChart 
+                        title={'Revenue and Expense'}
+                        xlabel={'Month'}
+                        ylabel={'Amount'}
+                        data={[1,2,3,4,5,6,7,8,9,10,11,12]}
+                        labels={['1','2','3','4','5','6','7','8','9','10','11','12']}
+                        backgroundColor={'#59a14f'}
+                    />
+                </Card>
             </div>
+        
         </div>
     )
 }

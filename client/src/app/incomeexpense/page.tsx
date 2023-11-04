@@ -19,6 +19,9 @@ import { TableInfo } from '@/components/TableInfo';
 
 import { HeaderCard } from '@/components/HeaderCard';
 
+import {BarChart}  from '@/components/chart/BarChart';
+
+
 export default function Page() {
 
     const [date, setDate] = useState<Dayjs>(dayjs());
@@ -74,50 +77,62 @@ export default function Page() {
                 />
 
             </div>
-            <div className="mt-10 flex">
-                <div className="w-1/2 flex flex-col items-center bg-pf-gray-100 z-10">
-                    <RemainingCard
-                        date={date.format('DD MMMM YYYY').toString()}
-                        revenue={totalRevenue}
-                        expense={totalExpense}
-                        remaining={totalRemaining}
-                        credit={totalCredit} 
+            <div className="w-full mt-10 px-5 flex flex-col justify-center items-center">
+                <div className="w-full flex justify-center">
+                    <div className="w-1/2 flex flex-col items-center justify-between bg-pf-gray-100 z-10">
+                        <RemainingCard
+                            date={date.format('DD MMMM YYYY').toString()}
+                            revenue={totalRevenue}
+                            expense={totalExpense}
+                            remaining={totalRemaining}
+                            credit={totalCredit} 
+                        />
+                        <Card>
+                            <HeaderCard
+                                text="Expense"
+                                func={() => router.push('/transaction')}
+                            />
+                            <div className='w-full flex justify-center'>
+                                <DoughnutChart 
+                                    data={transactions.filter((transaction) => transaction.transaction_type === 'expense').map((transaction) => transaction.amount)}
+                                    labels={transactions.filter((transaction) => transaction.transaction_type === 'expense').map((transaction) => transaction.category)}
+                                    backgroundColor={expenseColors}
+                                />
+                            </div>
+                        </Card>
+                    </div>
+                    <div className="w-1/2 flex bg-pf-gray-100">
+                        <Card>
+                            <HeaderCard
+                                text="List of Expense"
+                                func={() => router.push('/transaction')}
+                            />
+                            <div className='w-full flex justify-center'>
+                                <TableInfo 
+                                    columns={['Transaction', 'Amount']}
+                                    data={transactions
+                                        .filter((transaction) => transaction.transaction_type === 'expense')
+                                        .map((transaction) => (
+                                            {
+                                                category: transaction.category, 
+                                                amount: transaction.amount}
+                                            ))}
+                                    total={totalExpense}
+                                />
+                            </div>
+                        </Card>
+                    </div>
+                </div>
+                <Card>
+                    <BarChart 
+                        title='Revenue Expense'
+                        xlabel='Month'
+                        ylabel='Amount'
+                        data={[1,2,3,4,5,6,7,8,9,10,11,12]}
+                        labels={['1','2','3','4','5','6','7','8','9','10','11','12']}
+                        backgroundColor={'#59a14f'}
                     />
-                    <Card>
-                        <HeaderCard
-                            text="Expense"
-                            func={() => router.push('/transaction')}
-                        />
-                        <div className='w-full flex justify-center'>
-                            <DoughnutChart 
-                                data={transactions.filter((transaction) => transaction.transaction_type === 'expense').map((transaction) => transaction.amount)}
-                                labels={transactions.filter((transaction) => transaction.transaction_type === 'expense').map((transaction) => transaction.category)}
-                                backgroundColor={expenseColors}
-                            />
-                        </div>
-                    </Card>
-                </div>
-                <div className="w-1/2 flex bg-pf-gray-100">
-                    <Card>
-                        <HeaderCard
-                            text="List of Expense"
-                            func={() => router.push('/transaction')}
-                        />
-                        <div className='w-full flex justify-center'>
-                            <TableInfo 
-                                columns={['Transaction', 'Amount']}
-                                data={transactions
-                                    .filter((transaction) => transaction.transaction_type === 'expense')
-                                    .map((transaction) => (
-                                        {
-                                            category: transaction.category, 
-                                            amount: transaction.amount}
-                                        ))}
-                                total={totalExpense}
-                            />
-                        </div>
-                    </Card>
-                </div>
+                </Card>
             </div>
         </div>
     )

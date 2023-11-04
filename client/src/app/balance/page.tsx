@@ -73,45 +73,47 @@ export default function Page() {
                 />
 
             </div>
-            <div className="mt-10 flex">
-                <div className="w-1/2 flex flex-col items-center bg-pf-gray-100 z-10">
-                    <BalanceCard
-                        date={date.format('MMMM YYYY')}
-                        asset={totalEquity+totalDebt}
-                        de={totalDebt/totalEquity}
-                        debt={totalDebt}
-                    />
+            <div className='w-full mt-10 px-5 flex flex-col justify-center items-center'>
+                <div className="w-full flex justify-center">
+                    <div className="w-1/2 flex flex-col items-center bg-pf-gray-100 z-10">
+                        <BalanceCard
+                            date={date.format('MMMM YYYY')}
+                            asset={totalEquity+totalDebt}
+                            de={totalDebt/totalEquity}
+                            debt={totalDebt}
+                        />
 
-                    <BalanceChart  
-                        equity={totalEquity}
-                        debt={totalDebt}
-                    />
-                </div>
-                <div className="w-1/2 flex bg-pf-gray-100">
-                    <Card>
-                        <HeaderCard
-                            text="List of Asset"
-                            func={() => router.push('/balance/asset')}
+                        <BalanceChart  
+                            equity={totalEquity}
+                            debt={totalDebt}
                         />
-                        <div className='w-full flex justify-center'>
-                            <DoughnutChart 
-                                data={account.map((account) => account.amount)}
-                                labels={account.map((account) => account.account_name)}
-                                backgroundColor={revenueColors}
+                    </div>
+                    <div className="w-1/2 flex bg-pf-gray-100">
+                        <Card>
+                            <HeaderCard
+                                text="List of Asset"
+                                func={() => router.push('/balance/asset')}
                             />
-                        </div>
-                        <HeaderCard
-                            text="List of Debt"
-                            func={() => router.push('/balance/debt')}
-                        />
-                        <div className='w-full flex justify-center'>
-                            <DoughnutChart 
-                                data={debt.map((debt) => debt.Amount)}
-                                labels={debt.map((debt) => debt.DebtName)}
-                                backgroundColor={expenseColors}
+                            <div className='w-full flex justify-center'>
+                                <DoughnutChart 
+                                    data={account.map((account) => account.amount)}
+                                    labels={account.map((account) => account.account_name)}
+                                    backgroundColor={revenueColors}
+                                />
+                            </div>
+                            <HeaderCard
+                                text="List of Debt"
+                                func={() => router.push('/balance/debt')}
                             />
-                        </div>
-                    </Card>
+                            <div className='w-full flex justify-center'>
+                                <DoughnutChart 
+                                    data={debt.map((debt) => debt.Amount)}
+                                    labels={debt.map((debt) => debt.DebtName)}
+                                    backgroundColor={expenseColors}
+                                />
+                            </div>
+                        </Card>
+                    </div>
                 </div>
             </div>
         </div>

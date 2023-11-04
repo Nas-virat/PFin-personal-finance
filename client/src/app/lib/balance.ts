@@ -1,4 +1,4 @@
-
+import { fetchdata } from "@/utils/Fetch";
 
 const getSummaryBalance = async () =>{
     try{
@@ -20,5 +20,6 @@ const getSummaryBalance = async () =>{
         throw error;
     }
 }
+
 
 export {getSummaryBalance};

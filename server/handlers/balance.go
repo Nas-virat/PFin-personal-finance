@@ -25,7 +25,7 @@ func (h balanceHandler) HealthCheck(c *fiber.Ctx) error {
 func (h balanceHandler) GetSummaryBalanceHandler(c *fiber.Ctx) error {
 	summaryBalance, err := h.balanceSrv.GetSummaryBalance()
 	if err != nil{
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"status": "fail",
 			"message": err.Error(),
 		})

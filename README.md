@@ -20,7 +20,6 @@ PFin is using [PostgreSQL](https://www.postgresql.org/docs/) as a database. Note
 - [Installation](#Installation)
 - [Run the app](#run-the-app)
 - [Pages](#Pages)
-- [Feature](#Feature)
 
 
 ## Installation
@@ -42,6 +41,7 @@ PFin is using [PostgreSQL](https://www.postgresql.org/docs/) as a database. Note
     npm run dev // run the server
 ```
 
+
 ## Pages
 
 - Home page
@@ -52,3 +52,17 @@ In The home page, user can see the summary of their financial status. It show th
     <img src="./img/Home.png">
 </p>
 
+- Revenue Expense page
+
+In this page, user can see the list of revenue and expense. User can add new revenue and expense by clicking add button. 
+
+<p align="center" width="100%">
+    <img src="./img/RevenueExpense.png">
+</p>
+
+- Balance sheet page
+
+In this page, user can see the list of asset and debt. User can add new asset and debt by clicking add button.
+
+<p align="center" width="100%">
+    <img src="./img/Balance.png">

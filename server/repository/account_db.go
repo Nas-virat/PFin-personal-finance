@@ -47,3 +47,12 @@ func (repo *accountRepositoryDB) GetAccounts() ([]model.Account, error){
 	return accounts, nil
 }
 
+func (repo *accountRepositoryDB) EditAccountInfo(account model.Account, id int) (*model.Account, error) {
+	
+	err := repo.db.Model(&account).Where("id = ?", id).Updates(&account).Error
+	if err != nil {
+		return nil, err
+	}
+	return &account, nil
+}
+

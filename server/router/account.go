@@ -22,4 +22,5 @@ func SetupAccountRoutes(app *fiber.App, db *gorm.DB) {
 	v1.Get("/health", accountHandler.HealthCheck)
 	v1.Post("/create", accountHandler.CreateAccountHandler)
 	v1.Get("/getaccounts", accountHandler.GetAccountsHandler)
+	v1.Put("/edit/:id", accountHandler.EditAccountInfoHandler)
 }

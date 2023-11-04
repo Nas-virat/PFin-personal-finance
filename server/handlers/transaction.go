@@ -211,6 +211,26 @@ func (h transactionHandler) UpdateTransactionHandler(c *fiber.Ctx) error {
 	})
 }
 
+// Barchart home and summary by month and day
+func (h transactionHandler) GetSummaryRevenueExpenseHandler(c *fiber.Ctx) error {
+
+	//summaryRevenueExpenseResponse, err := h.transactionSrv.GetSummaryRevenueExpense()
+
+	// if err != nil{
+	// 	return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
+	// 		"status": "fail", 
+	// 		"message": err.Error(),
+	// 	})
+	// }
+
+	// return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
+	// 	"status": "success", 
+	// 	"message": "Get Summary Revenue Expense",
+	// 	"data": summaryRevenueExpenseResponse,
+	// })
+	return nil
+}
+
 func (h transactionHandler) DeleteTransactionHandler(c *fiber.Ctx) error {
 	
 	id, err := c.ParamsInt("id")

@@ -18,8 +18,8 @@ export const TableInfo = ({columns,data,total}:TableInfoProps)  => {
         <thead>
           <tr className=" bg-pf-secondary-2 text-pf-gray-100">
             {
-              columns.map((column) => (
-                <th className="px-6 py-4 text-2xl font-semibold">{column}</th>
+              columns.map((key,column) => (
+                <th key={key} className="px-6 py-4 text-2xl font-semibold">{column}</th>
               ))
             }
           </tr>
@@ -29,8 +29,8 @@ export const TableInfo = ({columns,data,total}:TableInfoProps)  => {
             data.map((item,index) => (
               <tr className="bg-pf-gray-100 text-pf-gray-900 text-center" key={index}>
                 {
-                  Object.keys(item).map((key) => (
-                    <td className="px-6 py-4 text-2xl font-semibold">
+                  Object.keys(item).map((key,index) => (
+                    <td key={'object-'+index} className="px-6 py-4 text-2xl font-semibold">
                       {
                       typeof item[key] === 'number' ?
                       item[key].toLocaleString('en-US', { style: 'currency', currency: 'THB' }) :

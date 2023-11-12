@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface Account {
+    account_id: number;
     account_name: string;
     account_type: string;
     amount: number;
@@ -58,6 +59,7 @@ export default function Page() {
                             .map((account, index) => (
                                 <div className='mb-9' key={index}>
                                     <Listitem
+                                        accountid={account.account_id}
                                         accountname={account.account_name}
                                         balance={account.amount}
                                         description={account.description}
@@ -78,6 +80,7 @@ export default function Page() {
                             .map((account, index) => (
                                 <div className='mb-9' key={index}>
                                     <Listitem
+                                        accountid={account.account_id}
                                         accountname={account.account_name}
                                         balance={account.amount}
                                         description={account.description}

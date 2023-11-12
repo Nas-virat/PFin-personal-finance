@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/Nas-virat/PFin-personal-finance/model"
+	"github.com/Nas-virat/PFin-personal-finance/response"
 	"github.com/Nas-virat/PFin-personal-finance/service"
 	"github.com/gofiber/fiber/v2"
 )
@@ -16,26 +17,16 @@ func NewBalanceHandler(balanceSrv service.BalanceService) balanceHandler {
 }
 
 func (h balanceHandler) HealthCheck(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
-		"status": "success",
-		"message": "health check",
-	})
+	return response.NewSuccessResponse(c, "Health check", fiber.StatusOK, nil)
 }
 
 func (h balanceHandler) GetSummaryBalanceHandler(c *fiber.Ctx) error {
 	summaryBalance, err := h.balanceSrv.GetSummaryBalance()
 	if err != nil{
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"status": "fail",
-			"message": err.Error(),
-		})
+		return response.NewErrorResponse(c, fiber.StatusUnprocessableEntity, err)
 	}
 
-	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
-		"status": "success",
-		"message": "get all accounts",
-		"data": summaryBalance,
-	})
+	return response.NewSuccessResponse(c, "Get summary balance", fiber.StatusOK, summaryBalance)
 }
 
 func (h balanceHandler) CreateDebtHandler(c *fiber.Ctx) error {
@@ -45,25 +36,15 @@ func (h balanceHandler) CreateDebtHandler(c *fiber.Ctx) error {
 	err := c.BodyParser(&request)
 
 	if err != nil{
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"status": "fail",
-			"message": err.Error(),
-		})
+		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
 	}
 
 	debtResponse, err := h.balanceSrv.CreateDebt(request)
 	if err != nil{
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
-			"status": "fail",
-			"message": err.Error(),
-		})
+		return response.NewErrorResponse(c, fiber.StatusUnprocessableEntity, err)
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
-		"status": "success",
-		"message": "insert successfully",
-		"data": debtResponse,
-	})
+	return response.NewSuccessResponse(c, "insert successfully", fiber.StatusCreated, debtResponse)
 }
 
 

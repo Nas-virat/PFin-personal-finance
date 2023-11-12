@@ -33,15 +33,17 @@ export default function Page() {
             type,
             balance
         );
+
+        console.log(res);
         
-        if (res.status === 'success') {
+        if (res.succuess === true) {
             Toast.fire({
                 icon: 'success',
                 title: 'Signed in successfully'
             })
             router.push('/setting');
         }
-        else if(res.status === 'fail'){
+        else if(res.succuess === false){
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',

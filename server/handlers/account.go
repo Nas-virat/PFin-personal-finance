@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"strconv"
+
 	"github.com/Nas-virat/PFin-personal-finance/model"
+	"github.com/Nas-virat/PFin-personal-finance/response"
 	"github.com/Nas-virat/PFin-personal-finance/service"
 	"github.com/gofiber/fiber/v2"
 )
@@ -22,26 +25,34 @@ func (h accountHandler) CreateAccountHandler(c *fiber.Ctx) error {
 	err := c.BodyParser(&request)
 
 	if err != nil{
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"status": "fail",
-			"message": err.Error(),
-		})
+		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
 	}
 
 	accountResponse ,err := h.accSrv.CreateAccount(request)
 
 	if err != nil{
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
-			"status": "fail", 
-			"message": err.Error(),
-		})
+		return response.NewErrorResponse(c, fiber.StatusUnprocessableEntity, err)
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(&fiber.Map{
-			"status":"success",
-			"message": "insert successfully",
-			"data": accountResponse,
-	})
+	return response.NewSuccessResponse(c, "insert successfully", fiber.StatusCreated, accountResponse)
+}
+
+func (h accountHandler) GetAccountByIdHandler(c *fiber.Ctx) error{
+
+	id := c.Params("id")
+	
+	accountId, err := strconv.Atoi(id)
+	if err != nil {
+		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
+	}
+	
+	account, err := h.accSrv.GetAccountById(accountId)
+
+	if err != nil{
+		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
+	}
+
+	return response.NewSuccessResponse(c, "get account by id", fiber.StatusOK, account)
 }
 
 func (h accountHandler) GetAccountsHandler(c *fiber.Ctx) error {
@@ -49,17 +60,10 @@ func (h accountHandler) GetAccountsHandler(c *fiber.Ctx) error {
 	accounts, err := h.accSrv.GetAccounts()
 
 	if err != nil{
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"status": "fail", 
-			"message": err.Error(),
-		})
+		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
 	}
 
-	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
-		"status": "success",
-		"message": "get all accounts",
-		"data": accounts,
-	})
+	return response.NewSuccessResponse(c, "get all accounts", fiber.StatusOK, accounts)
 }
 
 func (h accountHandler) EditAccountInfoHandler(c *fiber.Ctx) error {
@@ -69,42 +73,26 @@ func (h accountHandler) EditAccountInfoHandler(c *fiber.Ctx) error {
 	id, err := c.ParamsInt("id")
 
 	if err != nil || id < 0{
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"status": "fail", 
-			"message": err.Error(),
-		})
+		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
 	}
 
 	err = c.BodyParser(&request)
 
 	if err != nil{
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"status": "fail",
-			"message": err.Error(),
-		})
+		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
 	}
 
 	accountResponse, err := h.accSrv.EditAccountInfo(request,id)
 
 	if err != nil{
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"status": "fail",
-			"message": err.Error(),
-		})
+		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
 	}
 	
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
-		"status": "succuess",
-		"message":"update sucuessfully",
-		"data": accountResponse,
-	})
+	return response.NewSuccessResponse(c, "edit account info", fiber.StatusOK, accountResponse)
 }
  
 func (h accountHandler) HealthCheck(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
-		"status": "success",
-		"message": "health check",
-	})
+	return response.NewSuccessResponse(c, "health check", fiber.StatusOK, nil)
 }
 
 

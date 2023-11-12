@@ -36,14 +36,14 @@ export default function Page() {
             description,
             balance
         );
-        if (res.status === 'success') {
+        if (res.success === true) {
             Toast.fire({
                 icon: 'success',
                 title: 'Create Transaction Successfully'
             })
             router.push('/home');
         }
-        else if(res.status === 'fail'){
+        else if(res.success === false){
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',

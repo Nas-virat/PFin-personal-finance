@@ -34,6 +34,7 @@ type NewAccountResponse struct{
 }
 
 type AccountResponse struct{
+	AccountID 	int 		`json:"account_id"`
 	AccountName string 		`json:"account_name"`
 	Type 		string  	`json:"account_type"`
 	Amount      float64 	`json:"amount"`

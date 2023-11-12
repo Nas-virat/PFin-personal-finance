@@ -29,6 +29,13 @@ PFin is using [PostgreSQL](https://www.postgresql.org/docs/) as a database. Note
 
 ## Run the app
 
+### Setup the config file
+```
+    cd server
+    touch config.yaml
+```
+
+
 ### Run the API server
 ```
     cd server

@@ -60,6 +60,7 @@ func (s accountService) GetAccountById(accountID int) (*model.AccountResponse, e
 		return nil, errs.NewUnexpectedError()
 	}
 	accountResponse := model.AccountResponse{
+		AccountID: int(account.ID),
 		AccountName: account.AccountName,
 		Type: account.Type,
 		Amount: account.Amount,
@@ -82,6 +83,7 @@ func (s accountService) GetAccounts() ([]model.AccountResponse, error) {
 	for _, account := range accounts{
 		accountResponses = append(accountResponses, 
 			model.AccountResponse{
+				AccountID: int(account.ID),
 				AccountName: account.AccountName,
 				Type: account.Type,
 				Amount: account.Amount,

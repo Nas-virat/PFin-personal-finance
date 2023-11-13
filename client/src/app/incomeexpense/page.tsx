@@ -105,7 +105,7 @@ export default function Page() {
                         <Card>
                             <HeaderCard
                                 text="List of Expense"
-                                func={() => router.push('/transaction')}
+                                func={() => router.push('/incomeexpense/detail')}
                             />
                             <div className='w-full flex justify-center'>
                                 <TableInfo 

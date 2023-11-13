@@ -18,8 +18,8 @@ export const TableInfo = ({columns,data,total}:TableInfoProps)  => {
         <thead>
           <tr className=" bg-pf-secondary-2 text-pf-gray-100">
             {
-              columns.map((key,column) => (
-                <th key={key} className="px-6 py-4 text-2xl font-semibold">{column}</th>
+              columns.map((column,index) => (
+                <th key={index} className="px-6 py-4 text-2xl font-semibold">{column}</th>
               ))
             }
           </tr>

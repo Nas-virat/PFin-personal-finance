@@ -8,26 +8,14 @@ const postCreateAccount = async (
     amount: number,
 ) => {
     try {
-        const res = await fetch('http://localhost:8000/api/account/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                "account_name": account_name,
-                "account_type":account_type,
-                "amount":amount,
-                "description":description,
-                "currency":"THB"
-            }),
+        const res = await fetchdata.post('/account/create', {
+            account_name: account_name,
+            description: description,
+            account_type: account_type,
+            amount: amount,
+            currency: "THB"
         });
-
-        if (!res.ok) {
-            throw new Error(`Failed to create account. Status: ${res.status}`);
-        }
-
-        const data = await res.json();
-        return data;
+        return res.data;
     } catch (error) {
         console.error('Error creating account:', error);
         throw error;

@@ -8,7 +8,8 @@ import { FormControl, InputLabel } from '@mui/material';
 import { createTransaction } from '../lib/transaction';
 import Toast from '@/components/Alert';
 import Swal from 'sweetalert2';
-import { useRouter } from 'next/navigation';
+import { useRouter,useSearchParams} from 'next/navigation';
+import dayjs from 'dayjs';
 
 export default function Page() {
     const [transactionType, setType] = useState('income');
@@ -16,7 +17,8 @@ export default function Page() {
     const [description, setDescription] = useState('');
     const [balance, setBalance] = useState(0);
 
-    const router = useRouter()
+    const router = useRouter();
+    const searchParams = useSearchParams();
 
     const handleChange = (event: SelectChangeEvent) => {
         setType(event.target.value as string);
@@ -34,7 +36,10 @@ export default function Page() {
             transactionType,
             category,
             description,
-            balance
+            balance,
+            parseInt(searchParams.get('date') ?? dayjs().date().toString()),
+            parseInt(searchParams.get('month') ?? (dayjs().month()+1).toString()),
+            parseInt(searchParams.get('year') ?? dayjs().year().toString()),
         );
         if (res.success === true) {
             Toast.fire({
@@ -71,7 +76,6 @@ export default function Page() {
         <div>
             <div className='flex justify-between mx-32 text-pf-gray-900 font-bold text-2xl'>
                 <h1 className='text-[48px]'>Add Transaction</h1>
-                <div></div>
             </div>
             <div className='w-full flex justify-center'>
                 <Box

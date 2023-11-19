@@ -26,6 +26,9 @@ func (s transactionService) CreateTransaction(transactionRequest model.NewTransa
 		Category:        transactionRequest.Category,
 		Description:     transactionRequest.Description,
 		Amount:          transactionRequest.Amount,
+		TransactionDate: transactionRequest.TransactionDate,
+		TransactionMonth: transactionRequest.TransactionMonth,
+		TransactionYear: transactionRequest.TransactionYear,
 	}
 
 	transactionResult, err := s.transactionRepo.CreateTransaction(transaction)
@@ -37,9 +40,13 @@ func (s transactionService) CreateTransaction(transactionRequest model.NewTransa
 	transactionResponse := model.TransactionResponse{
 		CreateAt:        transactionResult.CreatedAt,
 		TransactionType: transactionResult.TransactionType,
-		Category:       transactionResult.Category,
+		Category:        transactionResult.Category,
 		Description:     transactionResult.Description,
 		Amount:          transactionResult.Amount,
+		TransactionDate: transactionResult.TransactionDate,
+		TransactionMonth: transactionResult.TransactionMonth,
+		TransactionYear: transactionResult.TransactionYear,
+
 	}
 
 	return &transactionResponse, nil
@@ -59,6 +66,9 @@ func (s transactionService) GetTransactionByID(id uint) (*model.TransactionRespo
 		Category:       transaction.Category,
 		Description:     transaction.Description,
 		Amount:          transaction.Amount,
+		TransactionDate: transaction.TransactionDate,
+		TransactionMonth: transaction.TransactionMonth,
+		TransactionYear: transaction.TransactionYear,
 	}
 
 	return &transactionResponse, nil
@@ -82,6 +92,9 @@ func (s transactionService) GetTransactions() ([]model.TransactionResponse, erro
 				Category:       transaction.Category,
 				Description:     transaction.Description,
 				Amount:          transaction.Amount,
+				TransactionDate: transaction.TransactionDate,
+				TransactionMonth: transaction.TransactionMonth,
+				TransactionYear: transaction.TransactionYear,
 			},
 		)
 	}
@@ -231,6 +244,9 @@ func (s transactionService) UpdateTransaction(id uint, newInfo model.NewTransact
 		Category:        newInfo.Category,
 		Description:     newInfo.Description,
 		Amount:          newInfo.Amount,
+		TransactionDate: newInfo.TransactionDate,
+		TransactionMonth: newInfo.TransactionMonth,
+		TransactionYear: newInfo.TransactionYear,
 	}
 
 	transaction, err := s.transactionRepo.UpdateTransaction(id, newTransaction)
@@ -245,6 +261,9 @@ func (s transactionService) UpdateTransaction(id uint, newInfo model.NewTransact
 		Category:        transaction.Category,
 		Description:     transaction.Description,
 		Amount:          transaction.Amount,
+		TransactionDate: transaction.TransactionDate,
+		TransactionMonth: transaction.TransactionMonth,
+		TransactionYear: transaction.TransactionYear,
 	}
 
 	return &transactionResponse, nil

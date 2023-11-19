@@ -7,6 +7,9 @@ const createTransaction = async (
     category: string,
     description: string,
     amount: number,
+    transaction_date: number,
+    transaction_month: number,
+    transaction_year: number,
 ) => {
     try{
         const res = await fetchdata.post('/transaction/create', {
@@ -14,6 +17,9 @@ const createTransaction = async (
             category: category,
             description: description,
             amount: amount,
+            transaction_date: transaction_date,
+            transaction_month: transaction_month,
+            transaction_year: transaction_year,
         });
         return res.data;
     }

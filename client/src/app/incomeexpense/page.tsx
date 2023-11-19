@@ -73,7 +73,7 @@ export default function Page() {
                 </div>
                 <AddButton 
                     text="Add Transaction"
-                    func={() => router.push('/transaction')}
+                    func={() => router.push('/transaction?date='+date.date()+'&month='+(date.month()+1)+'&year='+date.year()+'')}
                 />
 
             </div>

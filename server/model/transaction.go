@@ -51,3 +51,8 @@ type TransactionSummaryCategoryResponse struct {
 	Category        string  `json:"category"`
 	Amount          float64 `json:"amount"`
 }
+
+type SummaryRevenueExpenseResponse struct {
+	TotalRevenue   []float64 `json:"total_revenue"`
+	TotalExpense   []float64 `json:"total_expense"`
+}

@@ -1,6 +1,8 @@
 package service
 
 import (
+	"time"
+
 	"github.com/Nas-virat/PFin-personal-finance/errs"
 	"github.com/Nas-virat/PFin-personal-finance/model"
 	"github.com/Nas-virat/PFin-personal-finance/repository"
@@ -22,13 +24,13 @@ func (s transactionService) CreateTransaction(transactionRequest model.NewTransa
 	}
 
 	transaction := model.Transaction{
-		TransactionType: transactionRequest.TransactionType,
-		Category:        transactionRequest.Category,
-		Description:     transactionRequest.Description,
-		Amount:          transactionRequest.Amount,
-		TransactionDate: transactionRequest.TransactionDate,
+		TransactionType:  transactionRequest.TransactionType,
+		Category:         transactionRequest.Category,
+		Description:      transactionRequest.Description,
+		Amount:           transactionRequest.Amount,
+		TransactionDate:  transactionRequest.TransactionDate,
 		TransactionMonth: transactionRequest.TransactionMonth,
-		TransactionYear: transactionRequest.TransactionYear,
+		TransactionYear:  transactionRequest.TransactionYear,
 	}
 
 	transactionResult, err := s.transactionRepo.CreateTransaction(transaction)
@@ -38,15 +40,14 @@ func (s transactionService) CreateTransaction(transactionRequest model.NewTransa
 	}
 
 	transactionResponse := model.TransactionResponse{
-		CreateAt:        transactionResult.CreatedAt,
-		TransactionType: transactionResult.TransactionType,
-		Category:        transactionResult.Category,
-		Description:     transactionResult.Description,
-		Amount:          transactionResult.Amount,
-		TransactionDate: transactionResult.TransactionDate,
+		CreateAt:         transactionResult.CreatedAt,
+		TransactionType:  transactionResult.TransactionType,
+		Category:         transactionResult.Category,
+		Description:      transactionResult.Description,
+		Amount:           transactionResult.Amount,
+		TransactionDate:  transactionResult.TransactionDate,
 		TransactionMonth: transactionResult.TransactionMonth,
-		TransactionYear: transactionResult.TransactionYear,
-
+		TransactionYear:  transactionResult.TransactionYear,
 	}
 
 	return &transactionResponse, nil
@@ -61,17 +62,46 @@ func (s transactionService) GetTransactionByID(id uint) (*model.TransactionRespo
 	}
 
 	transactionResponse := model.TransactionResponse{
-		CreateAt:        transaction.CreatedAt,
-		TransactionType: transaction.TransactionType,
-		Category:       transaction.Category,
-		Description:     transaction.Description,
-		Amount:          transaction.Amount,
-		TransactionDate: transaction.TransactionDate,
+		CreateAt:         transaction.CreatedAt,
+		TransactionType:  transaction.TransactionType,
+		Category:         transaction.Category,
+		Description:      transaction.Description,
+		Amount:           transaction.Amount,
+		TransactionDate:  transaction.TransactionDate,
 		TransactionMonth: transaction.TransactionMonth,
-		TransactionYear: transaction.TransactionYear,
+		TransactionYear:  transaction.TransactionYear,
 	}
 
 	return &transactionResponse, nil
+}
+
+func (s transactionService) GetSummaryRevenueExpenseYear() (*model.SummaryRevenueExpenseResponse, error) {
+	// Get current year
+	year := time.Now().Year()
+
+	TotalRevenue := [12]float64{}
+	TotalExpense := [12]float64{}
+
+	for month := 1; month <= 12; month++ {
+		// Get all transaction in current month
+		transactions, err := s.transactionRepo.GetTransactionInRangeMonthYear(month, year)
+		if err != nil {
+			return nil, errs.NewUnexpectedError()
+		}
+		for _, transaction := range transactions{
+			if transaction.TransactionType == "income"{
+				TotalRevenue[month-1] += transaction.Amount
+			}else if transaction.TransactionType == "expense"{
+				TotalExpense[month-1] += transaction.Amount
+			}
+		}
+	}
+	sumaryRevenueExpense := model.SummaryRevenueExpenseResponse{
+		TotalRevenue: TotalRevenue[:],
+		TotalExpense: TotalExpense[:],
+	}
+
+	return &sumaryRevenueExpense, nil
 }
 
 func (s transactionService) GetTransactions() ([]model.TransactionResponse, error) {
@@ -87,14 +117,14 @@ func (s transactionService) GetTransactions() ([]model.TransactionResponse, erro
 	for _, transaction := range transactions {
 		transactionResponses = append(transactionResponses,
 			model.TransactionResponse{
-				CreateAt:        transaction.CreatedAt,
-				TransactionType: transaction.TransactionType,
-				Category:       transaction.Category,
-				Description:     transaction.Description,
-				Amount:          transaction.Amount,
-				TransactionDate: transaction.TransactionDate,
+				CreateAt:         transaction.CreatedAt,
+				TransactionType:  transaction.TransactionType,
+				Category:         transaction.Category,
+				Description:      transaction.Description,
+				Amount:           transaction.Amount,
+				TransactionDate:  transaction.TransactionDate,
 				TransactionMonth: transaction.TransactionMonth,
-				TransactionYear: transaction.TransactionYear,
+				TransactionYear:  transaction.TransactionYear,
 			},
 		)
 	}
@@ -149,9 +179,9 @@ func (s transactionService) GetTransactionInRangeMonthYear(month, year int) (*mo
 	for category, amount := range categoryAmountMap {
 		transactionCategoryResponse = append(transactionCategoryResponse,
 			model.TransactionSummaryCategoryResponse{
-				Category: category,
+				Category:        category,
 				TransactionType: categoryTypeMap[category],
-				Amount: amount,
+				Amount:          amount,
 			},
 		)
 	}
@@ -167,7 +197,7 @@ func (s transactionService) GetTransactionInRangeMonthYear(month, year int) (*mo
 	return &transactionSummaryResponses, nil
 }
 
-func (s transactionService) GetTransactionInRangeDayMonthYear(day, month, year int) (*model.TransactionSummaryResponse, error){
+func (s transactionService) GetTransactionInRangeDayMonthYear(day, month, year int) (*model.TransactionSummaryResponse, error) {
 	// Validate month and year
 	if month < 1 || month > 12 {
 		return nil, errs.NewVaildationError("Month must be in range 1-12")
@@ -181,7 +211,6 @@ func (s transactionService) GetTransactionInRangeDayMonthYear(day, month, year i
 	if err != nil {
 		return nil, errs.NewUnexpectedError()
 	}
-
 
 	transactionCategoryResponse := []model.TransactionSummaryCategoryResponse{}
 
@@ -214,9 +243,9 @@ func (s transactionService) GetTransactionInRangeDayMonthYear(day, month, year i
 	for category, amount := range categoryAmountMap {
 		transactionCategoryResponse = append(transactionCategoryResponse,
 			model.TransactionSummaryCategoryResponse{
-				Category: category,
+				Category:        category,
 				TransactionType: categoryTypeMap[category],
-				Amount: amount,
+				Amount:          amount,
 			},
 		)
 	}
@@ -240,13 +269,13 @@ func (s transactionService) UpdateTransaction(id uint, newInfo model.NewTransact
 	}
 
 	newTransaction := model.Transaction{
-		TransactionType: newInfo.TransactionType,
-		Category:        newInfo.Category,
-		Description:     newInfo.Description,
-		Amount:          newInfo.Amount,
-		TransactionDate: newInfo.TransactionDate,
+		TransactionType:  newInfo.TransactionType,
+		Category:         newInfo.Category,
+		Description:      newInfo.Description,
+		Amount:           newInfo.Amount,
+		TransactionDate:  newInfo.TransactionDate,
 		TransactionMonth: newInfo.TransactionMonth,
-		TransactionYear: newInfo.TransactionYear,
+		TransactionYear:  newInfo.TransactionYear,
 	}
 
 	transaction, err := s.transactionRepo.UpdateTransaction(id, newTransaction)
@@ -256,14 +285,14 @@ func (s transactionService) UpdateTransaction(id uint, newInfo model.NewTransact
 	}
 
 	transactionResponse := model.TransactionResponse{
-		CreateAt:        transaction.CreatedAt,
-		TransactionType: transaction.TransactionType,
-		Category:        transaction.Category,
-		Description:     transaction.Description,
-		Amount:          transaction.Amount,
-		TransactionDate: transaction.TransactionDate,
+		CreateAt:         transaction.CreatedAt,
+		TransactionType:  transaction.TransactionType,
+		Category:         transaction.Category,
+		Description:      transaction.Description,
+		Amount:           transaction.Amount,
+		TransactionDate:  transaction.TransactionDate,
 		TransactionMonth: transaction.TransactionMonth,
-		TransactionYear: transaction.TransactionYear,
+		TransactionYear:  transaction.TransactionYear,
 	}
 
 	return &transactionResponse, nil

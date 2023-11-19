@@ -20,6 +20,7 @@ func SetupTransactionRoute(app *fiber.App, db *gorm.DB){
 	v1.Get("/health",transactionHandler.HealthCheck)
 	v1.Post("/create",transactionHandler.CreateTransactionHandler)
 	v1.Get("/all",transactionHandler.GetTransactionsHandler)
+	v1.Get("/summary-year",transactionHandler.GetSummaryRevenueExpenseHandler)
 	v1.Get("/month/:month/year/:year",transactionHandler.GetTransactionInRangeMonthYearHandler)
 	v1.Get("/day/:day/month/:month/year/:year",transactionHandler.GetTransactionInRangeDayMonthYearHandler)
 	v1.Get("/:id",transactionHandler.GetTransactionByIDHandler)

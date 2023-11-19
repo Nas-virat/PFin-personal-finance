@@ -50,6 +50,18 @@ func (r transactionRepositoryDB) GetTransactions() ([]model.Transaction, error) 
 	return transactions, nil
 }
 
+func (r transactionRepositoryDB) GetTransactionInYear(year int) ([]model.Transaction,error) {
+
+	transactions := []model.Transaction{}
+
+	err := r.db.Where("transaction_year = ?",year).Find(&transactions).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return transactions, nil
+}
+
 func (r transactionRepositoryDB) GetTransactionInRangeMonthYear(month, year int) ([]model.Transaction, error) {
 
 	transactions := []model.Transaction{}

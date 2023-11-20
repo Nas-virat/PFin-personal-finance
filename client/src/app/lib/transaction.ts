@@ -49,9 +49,20 @@ const getTransactionsByDayMonthYear = async (day:number, month: number, year: nu
         throw error;
     }
 }
+
+const getSummaryByYear = async () => {
+    try{
+        const res = await fetchdata.get(`/summary-year`);
+        return res.data;
+    } catch(error){
+        console.error('Error getting transactions:', error);
+        throw error;
+    }
+}
     
 export {    
         createTransaction,
         getTransactionsByMonthYear ,
         getTransactionsByDayMonthYear,
+        getSummaryByYear
     };

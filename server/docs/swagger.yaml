@@ -1,0 +1,33 @@
+definitions:
+  model.NewAccountRequest:
+    properties:
+      account_name:
+        type: string
+      account_type:
+        type: string
+      amount:
+        type: number
+      currency:
+        type: string
+      description:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/account/create:
+    post:
+      consumes:
+      - application/json
+      description: Create Account
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.NewAccountRequest'
+      summary: CreateAccount
+      tags:
+      - account
+swagger: "2.0"

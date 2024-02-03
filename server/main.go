@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
 	"github.com/Nas-virat/PFin-personal-finance/constant"
 	"github.com/Nas-virat/PFin-personal-finance/db"
 	"github.com/Nas-virat/PFin-personal-finance/log"
@@ -12,6 +13,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/swagger"
+	_ "github.com/Nas-virat/PFin-personal-finance/docs"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -57,6 +60,8 @@ func main() {
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("root")
 	})
+
+	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	router.SetupAccountRoutes(app,db)
 	router.SetupTransactionRoute(app,db)

@@ -18,6 +18,14 @@ func NewAccountHandler(accSrv service.AccountService) accountHandler{
 	return accountHandler{accSrv:accSrv}
 }
 
+// CreateAccountHandler godoc
+// @Summary      CreateAccount
+// @Description  Create Account
+// @Tags         account
+// @Accept       json
+// @Produce      json
+// @Success      201  {object}  model.NewAccountRequest
+// @Router /api/account/create [post]
 func (h accountHandler) CreateAccountHandler(c *fiber.Ctx) error {
 
 	request := model.NewAccountRequest{}

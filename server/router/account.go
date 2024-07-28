@@ -2,24 +2,22 @@ package router
 
 import (
 	"github.com/Nas-virat/PFin-personal-finance/account"
-	"github.com/gofiber/fiber/v2"
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 // SetupRoutes func
-func SetupAccountRoutes(app *fiber.App, db *gorm.DB) {
+func SetupAccountRoutes(app *gin.RouterGroup, db *gorm.DB) {
  // grouping
 
 	accountRepositoryDB := account.NewAccountRepositoryDB(db)
 	accountService := account.NewAccountService(accountRepositoryDB)
 	accountHandler := account.NewAccountHandler(accountService)
-
-	api := app.Group("/api")
-	v1 := api.Group("/account")
+	
 	// routes
-	v1.Get("/", accountHandler.GetAccountsHandler)
-	v1.Get("/:id", accountHandler.GetAccountByIdHandler)
-	v1.Put("/:id", accountHandler.EditAccountInfoHandler)
-	v1.Get("/health", accountHandler.HealthCheck)
-	v1.Post("/create", accountHandler.CreateAccountHandler)
+	app.GET("/account", accountHandler.GetAccountsHandler)
+	app.GET("/account/:id", accountHandler.GetAccountByIdHandler)
+	app.PUT("/account/:id", accountHandler.EditAccountInfoHandler)
+	app.GET("/account/health", accountHandler.HealthCheck)
+	app.POST("/account/create", accountHandler.CreateAccountHandler)
 }

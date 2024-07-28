@@ -1,8 +1,11 @@
 package transaction
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/Nas-virat/PFin-personal-finance/response"
-	"github.com/gofiber/fiber/v2"
+	"github.com/gin-gonic/gin"
 )
 
 type transactionHandler struct {
@@ -21,21 +24,21 @@ func NewTransactionHandler(transactionSrv TransactionService) transactionHandler
 //	@Produce			json
 //	@Success			201	
 //	@Router				/api/transaction [post]
-func (h transactionHandler) CreateTransactionHandler(c *fiber.Ctx) error {
+func (h transactionHandler) CreateTransactionHandler(c *gin.Context) {
 
 	request := NewTransactionRequest{}
 
-	err := c.BodyParser(&request)
+	err := c.ShouldBindJSON(&request)
 
 	if err != nil {
-		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
+		response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	transactionResponse, err := h.transactionSrv.CreateTransaction(request)
 	if err != nil {
-		return response.NewErrorResponse(c, fiber.StatusUnprocessableEntity, err)
+		response.NewErrorResponse(c, http.StatusUnprocessableEntity, err)
 	}
-	return response.NewSuccessResponse(c, "insert successfully", fiber.StatusCreated, transactionResponse)
+	response.NewSuccessResponse(c, "insert successfully", http.StatusCreated, transactionResponse)
 }
 
 //  GetTransaction		godoc
@@ -46,15 +49,15 @@ func (h transactionHandler) CreateTransactionHandler(c *fiber.Ctx) error {
 //	@Produce			json
 //	@Success			200
 //	@Router				/api/transaction [get]
-func (h transactionHandler) GetTransactionsHandler(c *fiber.Ctx) error {
+func (h transactionHandler) GetTransactionsHandler(c *gin.Context) {
 
 	transactionResponses, err := h.transactionSrv.GetTransactions()
 
 	if err != nil {
-		return response.NewErrorResponse(c, fiber.StatusUnprocessableEntity, err)
+		response.NewErrorResponse(c, http.StatusUnprocessableEntity, err)
 	}
 
-	return response.NewSuccessResponse(c, "Get all transaction", fiber.StatusOK, transactionResponses)
+	response.NewSuccessResponse(c, "Get all transaction", http.StatusOK, transactionResponses)
 }
 
 //  GetTransactionInRangeMonthYear	godoc
@@ -67,16 +70,16 @@ func (h transactionHandler) GetTransactionsHandler(c *fiber.Ctx) error {
 //  @Param        					year   	path     int  true  "year"
 //	@Success						200
 //	@Router							/api/transaction/month/{month}/year/{year} [get]
-func (h transactionHandler) GetTransactionInRangeMonthYearHandler(c *fiber.Ctx) error {
+func (h transactionHandler) GetTransactionInRangeMonthYearHandler(c *gin.Context) {
 
-	year, err := c.ParamsInt("year")
+	year, err := strconv.Atoi(c.Param("year"))
 	if err != nil {
-		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
+		response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	month, err := c.ParamsInt("month")
+	month, err := strconv.Atoi(c.Param("month"))
 	if err != nil {
-		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
+		response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	transactionSummaryResponses, err := h.transactionSrv.GetTransactionInRangeMonthYear(
@@ -85,10 +88,10 @@ func (h transactionHandler) GetTransactionInRangeMonthYearHandler(c *fiber.Ctx) 
 	)
 
 	if err != nil {
-		return response.NewErrorResponse(c, fiber.StatusUnprocessableEntity, err)
+		response.NewErrorResponse(c, http.StatusUnprocessableEntity, err)
 	}
 
-	return response.NewSuccessResponse(c, "Get all transaction", fiber.StatusOK, transactionSummaryResponses)
+	response.NewSuccessResponse(c, "Get all transaction", http.StatusOK, transactionSummaryResponses)
 }
 
 //  GGetTransactionInRangeDayMonthYear	godoc
@@ -102,21 +105,21 @@ func (h transactionHandler) GetTransactionInRangeMonthYearHandler(c *fiber.Ctx) 
 //  @Param        						year   	path     int  true  "year"
 //	@Success							200
 //	@Router								/api/transaction/day/{day}/month/{month}/year/{year} [get]
-func (h transactionHandler) GetTransactionInRangeDayMonthYearHandler(c *fiber.Ctx) error {
+func (h transactionHandler) GetTransactionInRangeDayMonthYearHandler(c *gin.Context){
 
-	year, err := c.ParamsInt("year")
+	year, err := strconv.Atoi(c.Param("year"))
 	if err != nil {
-		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
+		response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	month, err := c.ParamsInt("month")
+	month, err := strconv.Atoi(c.Param("month"))
 	if err != nil {
-		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
+		response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	day, err := c.ParamsInt("day")
+	day, err := strconv.Atoi(c.Param("day"))
 	if err != nil {
-		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
+		response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	transactionSummaryResponses, err := h.transactionSrv.GetTransactionInRangeDayMonthYear(
@@ -126,10 +129,10 @@ func (h transactionHandler) GetTransactionInRangeDayMonthYearHandler(c *fiber.Ct
 	)
 
 	if err != nil {
-		return response.NewErrorResponse(c, fiber.StatusUnprocessableEntity, err)
+		response.NewErrorResponse(c, http.StatusUnprocessableEntity, err)
 	}
 
-	return response.NewSuccessResponse(c, "Get all transaction", fiber.StatusOK, transactionSummaryResponses)
+	response.NewSuccessResponse(c, "Get all transaction", http.StatusOK, transactionSummaryResponses)
 }
 
 //  GetTransactionByID	godoc
@@ -141,20 +144,22 @@ func (h transactionHandler) GetTransactionInRangeDayMonthYearHandler(c *fiber.Ct
 //  @Param        		id   	path     int  true  "Transaction ID"
 //	@Success			200
 //	@Router				/api/transaction/{id}	[get]
-func (h transactionHandler) GetTransactionByIDHandler(c *fiber.Ctx) error {
+func (h transactionHandler) GetTransactionByIDHandler(c *gin.Context) {
 
-	id, err := c.ParamsInt("id")
+	id := c.Param("id")
 
-	if err != nil || id < 0 {
-		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
+	transactionId, err := strconv.Atoi(id)
+
+	if err != nil || transactionId < 0 {
+		response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	transactionResponse, err := h.transactionSrv.GetTransactionByID(uint(id))
+	transactionResponse, err := h.transactionSrv.GetTransactionByID(uint(transactionId))
 
 	if err != nil {
-		return response.NewErrorResponse(c, fiber.StatusUnprocessableEntity, err)
+		response.NewErrorResponse(c, http.StatusUnprocessableEntity, err)
 	}
-	return response.NewSuccessResponse(c, "Get Transaction with ID", fiber.StatusOK, transactionResponse)
+	response.NewSuccessResponse(c, "Get Transaction with ID", http.StatusOK, transactionResponse)
 }
 
 
@@ -167,32 +172,30 @@ func (h transactionHandler) GetTransactionByIDHandler(c *fiber.Ctx) error {
 //  @Param        		id   	path     int  true  "Transaction ID"
 //	@Success			200
 //	@Router				/api/transaction/{id}	[put]
-func (h transactionHandler) UpdateTransactionByIdHandler(c *fiber.Ctx) error {
+func (h transactionHandler) UpdateTransactionByIdHandler(c *gin.Context) {
 
-	id, err := c.ParamsInt("id")
+	id := c.Param("id")
 
-	if err != nil || id < 0 {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"status":  "fail",
-			"message": err.Error(),
-		})
+	transactionId, err := strconv.Atoi(id)
+	if err != nil || transactionId < 0 {
+		response.NewErrorResponse(c,http.StatusBadRequest,err)
 	}
 
 	request := NewTransactionRequest{}
 
-	err = c.BodyParser(&request)
+	err = c.ShouldBindJSON(&request)
 
 	if err != nil {
-		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
+		response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	transactionResponse, err := h.transactionSrv.UpdateTransaction(uint(id), request)
+	transactionResponse, err := h.transactionSrv.UpdateTransaction(uint(transactionId), request)
 
 	if err != nil {
-		return response.NewErrorResponse(c, fiber.StatusUnprocessableEntity, err)
+		response.NewErrorResponse(c, http.StatusUnprocessableEntity, err)
 	}
 
-	return response.NewSuccessResponse(c, "Update Transaction with ID", fiber.StatusOK, transactionResponse)
+	response.NewSuccessResponse(c, "Update Transaction with ID", http.StatusOK, transactionResponse)
 }
 
 //  UpdateTransaction	godoc
@@ -203,15 +206,15 @@ func (h transactionHandler) UpdateTransactionByIdHandler(c *fiber.Ctx) error {
 //	@Produce			json
 //	@Success			200
 //	@Router				/api/transaction	[put]
-func (h transactionHandler) GetSummaryRevenueExpenseHandler(c *fiber.Ctx) error {
+func (h transactionHandler) GetSummaryRevenueExpenseHandler(c *gin.Context) {
 
 	summaryRevenueExpenseResponse, err := h.transactionSrv.GetSummaryRevenueExpenseYear()
 
 	if err != nil {
-		return response.NewErrorResponse(c, fiber.StatusInternalServerError, err)
+		response.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
 
-	return response.NewSuccessResponse(c, "Get summary revenue expense", fiber.StatusOK, summaryRevenueExpenseResponse)
+	response.NewSuccessResponse(c, "Get summary revenue expense", http.StatusOK, summaryRevenueExpenseResponse)
 }
 
 
@@ -224,23 +227,26 @@ func (h transactionHandler) GetSummaryRevenueExpenseHandler(c *fiber.Ctx) error 
 //  @Param        		id   	path     int  true  "Transaction ID"
 //	@Success			200
 //	@Router				/api/transaction/summary-year	[get]
-func (h transactionHandler) DeleteTransactionHandler(c *fiber.Ctx) error {
+func (h transactionHandler) DeleteTransactionHandler(c *gin.Context){
 
-	id, err := c.ParamsInt("id")
+	id := c.Param("id")
 
-	if err != nil || id < 0 {
-		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
+	transactionId, err := strconv.Atoi(id)
+
+
+	if err != nil || transactionId < 0 {
+		response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	err = h.transactionSrv.DeleteTransaction(uint(id))
+	err = h.transactionSrv.DeleteTransaction(uint(transactionId))
 
 	if err != nil {
-		return response.NewErrorResponse(c, fiber.StatusUnprocessableEntity, err)
+		response.NewErrorResponse(c, http.StatusUnprocessableEntity, err)
 	}
 
-	return response.NewSuccessResponse(c, "Delete Transaction with ID", fiber.StatusOK, nil)
+	response.NewSuccessResponse(c, "Delete Transaction with ID", http.StatusOK, nil)
 }
 
-func (h transactionHandler) HealthCheck(c *fiber.Ctx) error {
-	return response.NewSuccessResponse(c, "Health check", fiber.StatusOK, nil)
+func (h transactionHandler) HealthCheck(c *gin.Context) {
+	response.NewSuccessResponse(c, "Health check", http.StatusOK, nil)
 }

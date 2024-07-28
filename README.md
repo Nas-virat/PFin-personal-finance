@@ -48,6 +48,16 @@ PFin is using [PostgreSQL](https://www.postgresql.org/docs/) as a database. Note
     npm run dev // run the server
 ```
 
+### Run swagger docs
+```
+    cd server
+    swag init
+    ## open the browser and go to http://localhost:8080/swagger/index.html
+```
+
+
+
+
 
 ## Pages
 

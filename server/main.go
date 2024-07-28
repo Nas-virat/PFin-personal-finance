@@ -7,14 +7,13 @@ import (
 
 	"github.com/Nas-virat/PFin-personal-finance/constant"
 	"github.com/Nas-virat/PFin-personal-finance/db"
-	_ "github.com/Nas-virat/PFin-personal-finance/docs"
 	"github.com/Nas-virat/PFin-personal-finance/log"
 	"github.com/Nas-virat/PFin-personal-finance/router"
 	"github.com/Nas-virat/PFin-personal-finance/utils"
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/gofiber/swagger"
+	"github.com/gin-gonic/gin"
+	docs "github.com/Nas-virat/PFin-personal-finance/docs"
+   	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"gorm.io/gorm"
 )
 
@@ -37,36 +36,38 @@ func main() {
 		logg.Warn("Running in development mode")
 	}
 
-	app := fiber.New()
-	app.Use(logger.New())
-	app.Use(cors.New(
-		cors.Config{
-			AllowOrigins: "*",
-			AllowHeaders: "Origin, Content-Type, Accept",
-		},
-	))
-	logg.Info("Initialized fiber")
+	r := gin.Default()
+	
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("root")
-	})
+	// app := fiber.New()
+	// app.Use(logger.New())
+	// app.Use(cors.New(
+	// 	cors.Config{
+	// 		AllowOrigins: "*",
+	// 		AllowHeaders: "Origin, Content-Type, Accept",
+	// 	},
+	// ))
+	// logg.Info("Initialized fiber")
 
-	app.Get("/swagger/*", swagger.HandlerDefault)
+	// app.Get("/", func(c *fiber.Ctx) error {
+	// 	return c.SendString("root")
+	// })
 
-	router.SetupAccountRoutes(app, db)
-	router.SetupTransactionRoute(app, db)
-	router.SetupBalanceRoutes(app, db)
+	// app.Get("/swagger/*", swagger.HandlerDefault)
+	v1 := r.Group("/api")
+	docs.SwaggerInfo.BasePath = "/api"
+	
+	router.SetupAccountRoutes(v1,db)
+	router.SetupTransactionRoute(v1, db)
+	router.SetupBalanceRoutes(v1, db)
 
-	// handle unavailable route
-	app.Use(func(c *fiber.Ctx) error {
-		return c.SendStatus(404) // => 404 "Not Found"
-	})
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	app.Listen(":8000")
+	r.Run(":8080")
 }
 
 func initTimeZone() {
-	ict, err := time.LoadLocation("")
+	ict, err := time.LoadLocation("Local")
 	if err != nil {
 		panic(err)
 	}

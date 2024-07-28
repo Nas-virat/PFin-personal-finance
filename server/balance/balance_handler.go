@@ -1,7 +1,10 @@
 package balance
 
 import (
+	"net/http"
+
 	"github.com/Nas-virat/PFin-personal-finance/response"
+	"github.com/gin-gonic/gin"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -14,8 +17,8 @@ func NewBalanceHandler(balanceSrv BalanceService) balanceHandler {
 	return balanceHandler{balanceSrv: balanceSrv}
 }
 
-func (h balanceHandler) HealthCheck(c *fiber.Ctx) error {
-	return response.NewSuccessResponse(c, "Health check", fiber.StatusOK, nil)
+func (h balanceHandler) HealthCheck(c *gin.Context){
+	response.NewSuccessResponse(c, "Health check", http.StatusOK, nil)
 }
 
 //  GetSummaryBalance	godoc
@@ -26,13 +29,13 @@ func (h balanceHandler) HealthCheck(c *fiber.Ctx) error {
 //	@Produce			json
 //	@Success			200		
 //	@Router				/api/balance/summmary [get]
-func (h balanceHandler) GetSummaryBalanceHandler(c *fiber.Ctx) error {
+func (h balanceHandler) GetSummaryBalanceHandler(c *gin.Context){
 	summaryBalance, err := h.balanceSrv.GetSummaryBalance()
 	if err != nil{
-		return response.NewErrorResponse(c, fiber.StatusUnprocessableEntity, err)
+		response.NewErrorResponse(c, fiber.StatusUnprocessableEntity, err)
 	}
 
-	return response.NewSuccessResponse(c, "Get summary balance", fiber.StatusOK, summaryBalance)
+	response.NewSuccessResponse(c, "Get summary balance", http.StatusOK, summaryBalance)
 }
 
 //  CreateDebt			godoc
@@ -43,22 +46,22 @@ func (h balanceHandler) GetSummaryBalanceHandler(c *fiber.Ctx) error {
 //	@Produce			json
 //	@Success			201	
 //	@Router				/api/balance/debt [post]
-func (h balanceHandler) CreateDebtHandler(c *fiber.Ctx) error {
+func (h balanceHandler) CreateDebtHandler(c *gin.Context) {
 
 	request := NewDebtRequest{}
 
-	err := c.BodyParser(&request)
+	err := c.ShouldBindJSON(&request)
 
 	if err != nil{
-		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
+		response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	debtResponse, err := h.balanceSrv.CreateDebt(request)
 	if err != nil{
-		return response.NewErrorResponse(c, fiber.StatusUnprocessableEntity, err)
+		response.NewErrorResponse(c, fiber.StatusUnprocessableEntity, err)
 	}
 
-	return response.NewSuccessResponse(c, "insert successfully", fiber.StatusCreated, debtResponse)
+	response.NewSuccessResponse(c, "insert successfully", http.StatusCreated, debtResponse)
 }
 
 

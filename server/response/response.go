@@ -1,8 +1,7 @@
 package response
 
 import (
-	"github.com/gofiber/fiber/v2"
-	"github.com/Nas-virat/PFin-personal-finance/errs"
+	"github.com/gin-gonic/gin"
 )
 
 type Response struct {
@@ -12,20 +11,18 @@ type Response struct {
 	Error   error       `json:"error,omitempty"`
 }
 
-func NewErrorResponse(ctx *fiber.Ctx, status int, err error) error {
-	return ctx.Status(fiber.StatusInternalServerError).JSON(Response{
+func NewErrorResponse(c *gin.Context, status int, err error){
+	
+	c.JSON(status,Response{
 		Success: false,
-		Error:  errs.AppError{
-			Message: err.Error(),
-			Code:  status,
-		},
+		Message: err.Error(),
 	})
 }
 
-func NewSuccessResponse(ctx *fiber.Ctx, message string ,status int, data interface{}) error {
-	return ctx.Status(status).JSON(Response{
+func NewSuccessResponse(c *gin.Context, message string ,status int, data interface{}) {
+	c.JSON(status, Response{
 		Success: true,
 		Message: message,
-		Data:    data,
+		Data:data,
 	})
 }

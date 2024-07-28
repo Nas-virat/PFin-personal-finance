@@ -1,8 +1,11 @@
 package account
 
 import (
+	"net/http"
 	"strconv"
+
 	"github.com/Nas-virat/PFin-personal-finance/response"
+	"github.com/gin-gonic/gin"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -23,23 +26,23 @@ func NewAccountHandler(accSrv AccountService) accountHandler{
 //	@Produce		json
 //	@Success		201	{object}	NewAccountRequest
 //	@Router			/api/account/create [post]
-func (h accountHandler) CreateAccountHandler(c *fiber.Ctx) error {
+func (h accountHandler) CreateAccountHandler(c *gin.Context) {
 
 	request := NewAccountRequest{}
 
-	err := c.BodyParser(&request)
+	err := c.ShouldBindJSON(&request)
 
 	if err != nil{
-		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
+		response.NewErrorResponse(c, fiber.StatusBadRequest, err)
 	}
 
 	accountResponse ,err := h.accSrv.CreateAccount(request)
 
 	if err != nil{
-		return response.NewErrorResponse(c, fiber.StatusUnprocessableEntity, err)
+		response.NewErrorResponse(c, fiber.StatusUnprocessableEntity, err)
 	}
 
-	return response.NewSuccessResponse(c, "insert successfully", fiber.StatusCreated, accountResponse)
+	response.NewSuccessResponse(c, "insert successfully", http.StatusCreated, accountResponse)
 }
 
 //  GetAccountById 	godoc
@@ -51,22 +54,22 @@ func (h accountHandler) CreateAccountHandler(c *fiber.Ctx) error {
 //  @Param        	id   	path     int  true  "Account ID"
 //	@Success		200	{object}	AccountResponse
 //	@Router			/api/account/{id} [get]
-func (h accountHandler) GetAccountByIdHandler(c *fiber.Ctx) error{
+func (h accountHandler) GetAccountByIdHandler(c *gin.Context) {
 
-	id := c.Params("id")
+	id := c.Param("id")
 	
 	accountId, err := strconv.Atoi(id)
 	if err != nil {
-		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
+		response.NewErrorResponse(c, fiber.StatusBadRequest, err)
 	}
 	
 	account, err := h.accSrv.GetAccountById(accountId)
 
 	if err != nil{
-		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
+		response.NewErrorResponse(c, fiber.StatusBadRequest, err)
 	}
 
-	return response.NewSuccessResponse(c, "get account by id", fiber.StatusOK, account)
+	response.NewSuccessResponse(c, "get account by id", fiber.StatusOK, account)
 }
 
 //  GetAccounts		godoc
@@ -77,15 +80,15 @@ func (h accountHandler) GetAccountByIdHandler(c *fiber.Ctx) error{
 //	@Produce		json
 //	@Success		200	{object}	AccountResponse	
 //	@Router			/api/account [get]
-func (h accountHandler) GetAccountsHandler(c *fiber.Ctx) error {
+func (h accountHandler) GetAccountsHandler(c *gin.Context) {
 
 	accounts, err := h.accSrv.GetAccounts()
 
 	if err != nil{
-		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
+		response.NewErrorResponse(c, fiber.StatusBadRequest, err)
 	}
 
-	return response.NewSuccessResponse(c, "get all accounts", fiber.StatusOK, accounts)
+	response.NewSuccessResponse(c, "get all accounts", fiber.StatusOK, accounts)
 }
 
 //  EditAccountInfo	godoc
@@ -97,33 +100,35 @@ func (h accountHandler) GetAccountsHandler(c *fiber.Ctx) error {
 //  @Param        	id   	path     int  true  "Account ID"
 //	@Success		200	{object}	AccountResponse	
 //	@Router			/api/account/{id} [put]
-func (h accountHandler) EditAccountInfoHandler(c *fiber.Ctx) error {
+func (h accountHandler) EditAccountInfoHandler(c *gin.Context) {
 	
 	request := NewAccountRequest{}
 
-	id, err := c.ParamsInt("id")
+	id := c.Param("id")
 
-	if err != nil || id < 0{
-		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
+	accountId, err := strconv.Atoi(id)
+
+	if err != nil || accountId < 0{
+		response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	err = c.BodyParser(&request)
+	err = c.ShouldBindJSON(&request)
 
 	if err != nil{
-		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
+		response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	accountResponse, err := h.accSrv.EditAccountInfo(request,id)
+	accountResponse, err := h.accSrv.EditAccountInfo(request,accountId)
 
 	if err != nil{
-		return response.NewErrorResponse(c, fiber.StatusBadRequest, err)
+		response.NewErrorResponse(c, fiber.StatusBadRequest, err)
 	}
 	
-	return response.NewSuccessResponse(c, "edit account info", fiber.StatusOK, accountResponse)
+	response.NewSuccessResponse(c, "edit account info", fiber.StatusOK, accountResponse)
 }
  
-func (h accountHandler) HealthCheck(c *fiber.Ctx) error {
-	return response.NewSuccessResponse(c, "health check", fiber.StatusOK, nil)
+func (h accountHandler) HealthCheck(c *gin.Context){
+	response.NewSuccessResponse(c, "health check", fiber.StatusOK, nil)
 }
 
 

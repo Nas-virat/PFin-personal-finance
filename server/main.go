@@ -1,12 +1,13 @@
 package main
 
 import (
-	"fmt"
-	"strings"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/Nas-virat/PFin-personal-finance/constant"
 	"github.com/Nas-virat/PFin-personal-finance/db"
+	_ "github.com/Nas-virat/PFin-personal-finance/docs"
 	"github.com/Nas-virat/PFin-personal-finance/log"
 	"github.com/Nas-virat/PFin-personal-finance/router"
 	"github.com/Nas-virat/PFin-personal-finance/utils"
@@ -14,13 +15,8 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/swagger"
-	_ "github.com/Nas-virat/PFin-personal-finance/docs"
-	"github.com/spf13/viper"
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
-
-
 
 func main() {
 
@@ -30,23 +26,17 @@ func main() {
 	initTimeZone()
 	logg.Info("Initialized timezone")
 
-	// Initialize config
-	initConfig()
-	logg.Info("Initialized config")
-
 	db := initDB()
 	logg.Info("Initialized database")
-	
+
 	// Migrate the schema
 	utils.Migration(db)
 	logg.Info("Migrated the schema")
 
-
-
 	if constant.IsDevelopment {
 		logg.Warn("Running in development mode")
 	}
-	
+
 	app := fiber.New()
 	app.Use(logger.New())
 	app.Use(cors.New(
@@ -63,22 +53,20 @@ func main() {
 
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
-	router.SetupAccountRoutes(app,db)
-	router.SetupTransactionRoute(app,db)
-	router.SetupBalanceRoutes(app,db)
-
+	router.SetupAccountRoutes(app, db)
+	router.SetupTransactionRoute(app, db)
+	router.SetupBalanceRoutes(app, db)
 
 	// handle unavailable route
 	app.Use(func(c *fiber.Ctx) error {
 		return c.SendStatus(404) // => 404 "Not Found"
-	   })
-
+	})
 
 	app.Listen(":8000")
 }
 
 func initTimeZone() {
-	ict, err := time.LoadLocation("Asia/Bangkok")
+	ict, err := time.LoadLocation("")
 	if err != nil {
 		panic(err)
 	}
@@ -86,39 +74,24 @@ func initTimeZone() {
 	time.Local = ict
 }
 
-func initConfig(){
-	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath(".") 
-	viper.AutomaticEnv() 
-	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
-
-
-	err := viper.ReadInConfig()
-	if err != nil {
-	  panic(fmt.Errorf("fatal error config file: %s \n", err))
-	}
-
-}
-
 func initDB() *gorm.DB {
 	// Connect to the database.
-	dbConfig := db.Config{
-		User:	   viper.GetString("db.user"),
-		Password:  viper.GetString("db.password"),
-		Host:	   viper.GetString("db.host"),
-		Port:	   viper.GetInt("db.port"),
-		Name:	   viper.GetString("db.database"),
-	}
-	db := db.ConnectDB(dbConfig)
-
-	gormDB, err := gorm.Open(postgres.New(postgres.Config{
-		Conn: db,
-	  }), &gorm.Config{})
+	port, err := strconv.Atoi(os.Getenv("DATABASE_PORT"))
 
 	if err != nil {
 		panic(err)
 	}
 
-	return gormDB
+	dbConfig := db.Config{
+		User:     os.Getenv("DATABASE_USER"),
+		Password: os.Getenv("DATABASE_PASSWORD"),
+		Host:     os.Getenv("DATABASE_HOST"),
+		Port:     port,
+		Name:     os.Getenv("DATABASE_NAME"),
+		TimeZone: os.Getenv("DATABASE_TIMEZONE"),
+		DisableTLS: true,
+	}
+	db := db.ConnectDB(dbConfig)
+
+	return db
 }

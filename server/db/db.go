@@ -2,10 +2,10 @@ package db
 
 import (
 	"fmt"
-	"time"
+	"log"
 
-	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq" // The database driver in use.
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 // Config is the database configuration.
@@ -15,11 +15,12 @@ type Config struct {
 	Host       string
 	Port       int
 	Name       string
+	TimeZone   string
 	DisableTLS bool
 }
 
 // ConnectDB connects to the database.
-func ConnectDB(c Config) *sqlx.DB {
+func ConnectDB(c Config) *gorm.DB {
 
 	sslmode := "require"
 
@@ -27,15 +28,15 @@ func ConnectDB(c Config) *sqlx.DB {
 		sslmode = "disable"
 	}
 
-	conStr := fmt.Sprintf("user=%s password=%s host=%s port=%d dbname=%s sslmode=%s", c.User, c.Password, c.Host, c.Port, c.Name, sslmode)
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=%s TimeZone=%s", c.Host, c.User, c.Password, c.Name, c.Port, sslmode, c.TimeZone)
 
-	db, err := sqlx.Open("postgres", conStr)
+	
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
 	if err != nil {
-		panic(err)
+		log.Fatalf("Cann't open gorm postgres %s",err.Error())
 	}
 
-	db.SetConnMaxLifetime(3 * time.Minute)
-	db.SetMaxOpenConns(10)
-	db.SetMaxIdleConns(10)
+
 	return db
 }

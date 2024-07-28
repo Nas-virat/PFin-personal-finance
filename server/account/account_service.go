@@ -7,7 +7,7 @@ import (
 )
 
 type AccountService interface {
-	CreateAccount(account NewAccountRequest) (*NewAccountResponse, error)
+   CreateAccount(account NewAccountRequest) (*NewAccountResponse, error)
    GetAccountById(accountID int) (*AccountResponse, error)
    GetAccounts() ([]AccountResponse, error)
    EditAccountInfo(account NewAccountRequest, id int) (*NewAccountResponse, error)
@@ -19,7 +19,7 @@ type accountService struct {
 	accRepo AccountRepository
 }
 
-func NewAccountService(accRepo AccountRepository) AccountService {
+func NewAccountService(accRepo AccountRepository) accountService {
 	return accountService{accRepo: accRepo}
 }
 

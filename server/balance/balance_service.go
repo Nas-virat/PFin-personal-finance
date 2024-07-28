@@ -15,7 +15,7 @@ type balanceService struct{
 }
 
 
-func NewBalanceService(balanceRepo BalanceRepository) BalanceService{
+func NewBalanceService(balanceRepo BalanceRepository) balanceService{
 	return balanceService{balanceRepo:balanceRepo}
 }
 

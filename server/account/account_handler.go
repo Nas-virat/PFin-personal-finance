@@ -16,13 +16,13 @@ func NewAccountHandler(accSrv AccountService) accountHandler{
 }
 
 // CreateAccountHandler godoc
-// @Summary      CreateAccount
-// @Description  Create Account
-// @Tags         account
-// @Accept       json
-// @Produce      json
-// @Success      201  {object}  model.NewAccountRequest
-// @Router /api/account/create [post]
+//	@Summary		CreateAccount
+//	@Description	Create Account
+//	@Tags			account
+//	@Accept			json
+//	@Produce		json
+//	@Success		201	{object}	NewAccountRequest
+//	@Router			/api/account/create [post]
 func (h accountHandler) CreateAccountHandler(c *fiber.Ctx) error {
 
 	request := NewAccountRequest{}
@@ -42,6 +42,15 @@ func (h accountHandler) CreateAccountHandler(c *fiber.Ctx) error {
 	return response.NewSuccessResponse(c, "insert successfully", fiber.StatusCreated, accountResponse)
 }
 
+//  GetAccountById 	godoc
+//	@Summary		GetAccountById
+//	@Description	Get account by id
+//	@Tags			account	
+//	@Accept			json
+//	@Produce		json
+//  @Param        	id   	path     int  true  "Account ID"
+//	@Success		200	{object}	AccountResponse
+//	@Router			/api/account/{id} [get]
 func (h accountHandler) GetAccountByIdHandler(c *fiber.Ctx) error{
 
 	id := c.Params("id")
@@ -60,6 +69,14 @@ func (h accountHandler) GetAccountByIdHandler(c *fiber.Ctx) error{
 	return response.NewSuccessResponse(c, "get account by id", fiber.StatusOK, account)
 }
 
+//  GetAccounts		godoc
+//	@Summary		GetAccounts
+//	@Description	Get AllAccounts
+//	@Tags			account	
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	AccountResponse	
+//	@Router			/api/account [get]
 func (h accountHandler) GetAccountsHandler(c *fiber.Ctx) error {
 
 	accounts, err := h.accSrv.GetAccounts()
@@ -71,6 +88,15 @@ func (h accountHandler) GetAccountsHandler(c *fiber.Ctx) error {
 	return response.NewSuccessResponse(c, "get all accounts", fiber.StatusOK, accounts)
 }
 
+//  EditAccountInfo	godoc
+//	@Summary		Edit Account Info
+//	@Description	Edit Account Info
+//	@Tags			account	
+//	@Accept			json
+//	@Produce		json
+//  @Param        	id   	path     int  true  "Account ID"
+//	@Success		200	{object}	AccountResponse	
+//	@Router			/api/account/{id} [put]
 func (h accountHandler) EditAccountInfoHandler(c *fiber.Ctx) error {
 	
 	request := NewAccountRequest{}

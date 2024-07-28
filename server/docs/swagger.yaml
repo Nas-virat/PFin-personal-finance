@@ -1,5 +1,20 @@
 definitions:
-  model.NewAccountRequest:
+  account.AccountResponse:
+    properties:
+      account_id:
+        type: integer
+      account_name:
+        type: string
+      account_type:
+        type: string
+      amount:
+        type: number
+      description:
+        type: string
+      status:
+        type: boolean
+    type: object
+  account.NewAccountRequest:
     properties:
       account_name:
         type: string
@@ -15,6 +30,62 @@ definitions:
 info:
   contact: {}
 paths:
+  /api/account:
+    get:
+      consumes:
+      - application/json
+      description: Get AllAccounts
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/account.AccountResponse'
+      summary: GetAccounts
+      tags:
+      - account
+  /api/account/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get account by id
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/account.AccountResponse'
+      summary: GetAccountById
+      tags:
+      - account
+    put:
+      consumes:
+      - application/json
+      description: Edit Account Info
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/account.AccountResponse'
+      summary: Edit Account Info
+      tags:
+      - account
   /api/account/create:
     post:
       consumes:
@@ -26,8 +97,180 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/model.NewAccountRequest'
+            $ref: '#/definitions/account.NewAccountRequest'
       summary: CreateAccount
       tags:
       - account
+  /api/balance/debt:
+    post:
+      consumes:
+      - application/json
+      description: Create Debt
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+      summary: Create Debt
+      tags:
+      - Balance
+  /api/balance/summmary:
+    get:
+      consumes:
+      - application/json
+      description: Get Summary Balance
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get Summary Balance
+      tags:
+      - Balance
+  /api/transaction:
+    get:
+      consumes:
+      - application/json
+      description: Get All Transaction
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get All Transaction
+      tags:
+      - Transcation
+    post:
+      consumes:
+      - application/json
+      description: Create Transaction
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+      summary: Create Transaction
+      tags:
+      - Transcation
+    put:
+      consumes:
+      - application/json
+      description: Get Summary Revenue Expense
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get Summary Revenue Expense
+      tags:
+      - Transcation
+  /api/transaction/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get Transaction By Id
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get Transaction By Id
+      tags:
+      - Transcation
+    put:
+      consumes:
+      - application/json
+      description: Update Transaction By Id
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Update Transaction By Id
+      tags:
+      - Transcation
+  /api/transaction/day/{day}/month/{month}/year/{year}:
+    get:
+      consumes:
+      - application/json
+      description: Get All Transaction in Range Day Month and Year
+      parameters:
+      - description: day
+        in: path
+        name: day
+        required: true
+        type: integer
+      - description: month
+        in: path
+        name: month
+        required: true
+        type: integer
+      - description: year
+        in: path
+        name: year
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get All Transaction in Range Day Month and Year
+      tags:
+      - Transcation
+  /api/transaction/month/{month}/year/{year}:
+    get:
+      consumes:
+      - application/json
+      description: Get All Transaction in Range Month and Year
+      parameters:
+      - description: month
+        in: path
+        name: month
+        required: true
+        type: integer
+      - description: year
+        in: path
+        name: year
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get All Transaction in Range Month and Year
+      tags:
+      - Transcation
+  /api/transaction/summary-year:
+    get:
+      consumes:
+      - application/json
+      description: Delete Transaction
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Delete Transaction
+      tags:
+      - Transcation
 swagger: "2.0"

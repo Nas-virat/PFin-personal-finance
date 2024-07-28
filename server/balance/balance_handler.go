@@ -18,6 +18,14 @@ func (h balanceHandler) HealthCheck(c *fiber.Ctx) error {
 	return response.NewSuccessResponse(c, "Health check", fiber.StatusOK, nil)
 }
 
+//  GetSummaryBalance	godoc
+//	@Summary			Get Summary Balance
+//	@Description		Get Summary Balance
+//	@Tags				Balance	
+//	@Accept				json
+//	@Produce			json
+//	@Success			200		
+//	@Router				/api/balance/summmary [get]
 func (h balanceHandler) GetSummaryBalanceHandler(c *fiber.Ctx) error {
 	summaryBalance, err := h.balanceSrv.GetSummaryBalance()
 	if err != nil{
@@ -27,6 +35,14 @@ func (h balanceHandler) GetSummaryBalanceHandler(c *fiber.Ctx) error {
 	return response.NewSuccessResponse(c, "Get summary balance", fiber.StatusOK, summaryBalance)
 }
 
+//  CreateDebt			godoc
+//	@Summary			Create Debt
+//	@Description		Create Debt
+//	@Tags				Balance	
+//	@Accept				json
+//	@Produce			json
+//	@Success			201	
+//	@Router				/api/balance/debt [post]
 func (h balanceHandler) CreateDebtHandler(c *fiber.Ctx) error {
 
 	request := NewDebtRequest{}

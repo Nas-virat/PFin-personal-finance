@@ -1,18 +1,16 @@
 package router
 
 import (
-	"github.com/Nas-virat/PFin-personal-finance/handlers"
-	"github.com/Nas-virat/PFin-personal-finance/repository"
-	"github.com/Nas-virat/PFin-personal-finance/service"
+	"github.com/Nas-virat/PFin-personal-finance/transaction"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
 
 func SetupTransactionRoute(app *fiber.App, db *gorm.DB){
-	transactionRepositoryDB := repository.NewTransactionRepositoryDB(db)
-	transactionService := service.NewTransactionService(transactionRepositoryDB)
-	transactionHandler := handlers.NewTransactionHandler(transactionService)
+	transactionRepositoryDB := transaction.NewTransactionRepositoryDB(db)
+	transactionService := transaction.NewTransactionService(transactionRepositoryDB)
+	transactionHandler := transaction.NewTransactionHandler(transactionService)
 
 	api := app.Group("/api")
  	v1 := api.Group("/transaction")

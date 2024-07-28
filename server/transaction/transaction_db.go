@@ -1,7 +1,6 @@
-package repository
+package transaction
 
 import (
-	"github.com/Nas-virat/PFin-personal-finance/model"
 	"gorm.io/gorm"
 )
 
@@ -14,7 +13,7 @@ func NewTransactionRepositoryDB(db *gorm.DB) TransactionRepository {
 	return &transactionRepositoryDB{db: db}
 }
 
-func (r transactionRepositoryDB) CreateTransaction(transaction model.Transaction) (*model.Transaction, error) {
+func (r transactionRepositoryDB) CreateTransaction(transaction Transaction) (*Transaction, error) {
 
 	result := r.db.Create(&transaction)
 
@@ -25,9 +24,9 @@ func (r transactionRepositoryDB) CreateTransaction(transaction model.Transaction
 	return &transaction, nil
 }
 
-func (r transactionRepositoryDB) GetTransactionByID(id uint) (*model.Transaction, error) {
+func (r transactionRepositoryDB) GetTransactionByID(id uint) (*Transaction, error) {
 
-	transaction := model.Transaction{}
+	transaction := Transaction{}
 
 	result := r.db.Find(&transaction, id)
 
@@ -38,9 +37,9 @@ func (r transactionRepositoryDB) GetTransactionByID(id uint) (*model.Transaction
 	return &transaction, nil
 }
 
-func (r transactionRepositoryDB) GetTransactions() ([]model.Transaction, error) {
+func (r transactionRepositoryDB) GetTransactions() ([]Transaction, error) {
 
-	transactions := []model.Transaction{}
+	transactions := []Transaction{}
 
 	err := r.db.Find(&transactions).Error
 	if err != nil {
@@ -50,9 +49,9 @@ func (r transactionRepositoryDB) GetTransactions() ([]model.Transaction, error) 
 	return transactions, nil
 }
 
-func (r transactionRepositoryDB) GetTransactionInYear(year int) ([]model.Transaction,error) {
+func (r transactionRepositoryDB) GetTransactionInYear(year int) ([]Transaction,error) {
 
-	transactions := []model.Transaction{}
+	transactions := []Transaction{}
 
 	err := r.db.Where("transaction_year = ?",year).Find(&transactions).Error
 	if err != nil {
@@ -62,9 +61,9 @@ func (r transactionRepositoryDB) GetTransactionInYear(year int) ([]model.Transac
 	return transactions, nil
 }
 
-func (r transactionRepositoryDB) GetTransactionInRangeMonthYear(month, year int) ([]model.Transaction, error) {
+func (r transactionRepositoryDB) GetTransactionInRangeMonthYear(month, year int) ([]Transaction, error) {
 
-	transactions := []model.Transaction{}
+	transactions := []Transaction{}
 
 	err := r.db.Where("transaction_month = ? AND transaction_year = ?", month, year).Find(&transactions).Error
 
@@ -75,8 +74,8 @@ func (r transactionRepositoryDB) GetTransactionInRangeMonthYear(month, year int)
 	return transactions, nil
 }
 
-func (r transactionRepositoryDB) GetTransactionInRangeDayMonthYear(day,month,year int) ([]model.Transaction,error){
-	transactions := []model.Transaction{}
+func (r transactionRepositoryDB) GetTransactionInRangeDayMonthYear(day,month,year int) ([]Transaction,error){
+	transactions := []Transaction{}
 
 	err := r.db.Where("transaction_date = ? AND transaction_month = ? AND transaction_year = ?", day,month,year).Find(&transactions).Error
 
@@ -87,8 +86,8 @@ func (r transactionRepositoryDB) GetTransactionInRangeDayMonthYear(day,month,yea
 	return transactions,nil
 }
 
-func (r transactionRepositoryDB) UpdateTransaction(id uint, newInfo model.Transaction) (*model.Transaction, error) {
-	transaction := model.Transaction{}
+func (r transactionRepositoryDB) UpdateTransaction(id uint, newInfo Transaction) (*Transaction, error) {
+	transaction := Transaction{}
 
 	// find transaction
 	result := r.db.Find(&transaction, id)
@@ -98,7 +97,7 @@ func (r transactionRepositoryDB) UpdateTransaction(id uint, newInfo model.Transa
 	}
 
 	// update the transaction
-	result = r.db.Model(&transaction).Updates(model.Transaction{
+	result = r.db.Model(&transaction).Updates(Transaction{
 		TransactionType: newInfo.TransactionType,
 		Category:        newInfo.Category,
 		Description:     newInfo.Description,
@@ -118,7 +117,7 @@ func (r transactionRepositoryDB) UpdateTransaction(id uint, newInfo model.Transa
 
 func (r transactionRepositoryDB) DeleteTransaction(id uint) error {
 
-	transaction := model.Transaction{}
+	transaction := Transaction{}
 
 	result := r.db.Find(&transaction, id)
 

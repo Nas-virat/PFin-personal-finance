@@ -1,23 +1,21 @@
-package handlers
+package transaction
 
 import (
-	"github.com/Nas-virat/PFin-personal-finance/model"
 	"github.com/Nas-virat/PFin-personal-finance/response"
-	"github.com/Nas-virat/PFin-personal-finance/service"
 	"github.com/gofiber/fiber/v2"
 )
 
 type transactionHandler struct {
-	transactionSrv service.TransactionService
+	transactionSrv TransactionService
 }
 
-func NewTransactionHandler(transactionSrv service.TransactionService) transactionHandler {
+func NewTransactionHandler(transactionSrv TransactionService) transactionHandler {
 	return transactionHandler{transactionSrv: transactionSrv}
 }
 
 func (h transactionHandler) CreateTransactionHandler(c *fiber.Ctx) error {
 
-	request := model.NewTransactionRequest{}
+	request := NewTransactionRequest{}
 
 	err := c.BodyParser(&request)
 
@@ -127,7 +125,7 @@ func (h transactionHandler) UpdateTransactionHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	request := model.NewTransactionRequest{}
+	request := NewTransactionRequest{}
 
 	err = c.BodyParser(&request)
 

@@ -1,21 +1,25 @@
-package service
+package balance
 
 import (
+	"github.com/Nas-virat/PFin-personal-finance/account"
 	"github.com/Nas-virat/PFin-personal-finance/errs"
-	"github.com/Nas-virat/PFin-personal-finance/model"
-	"github.com/Nas-virat/PFin-personal-finance/repository"
 )
 
+type BalanceService interface{
+	GetSummaryBalance()(*SummaryBalanceResponse, error)
+	CreateDebt(debt NewDebtRequest)(*DebtResponse,error)
+}
+
 type balanceService struct{
-	balanceRepo repository.BalanceRepository
+	balanceRepo BalanceRepository
 }
 
 
-func NewBalanceService(balanceRepo repository.BalanceRepository) BalanceService{
+func NewBalanceService(balanceRepo BalanceRepository) BalanceService{
 	return balanceService{balanceRepo:balanceRepo}
 }
 
-func (s balanceService) GetSummaryBalance()(*model.SummaryBalanceResponse, error){
+func (s balanceService) GetSummaryBalance()(*SummaryBalanceResponse, error){
 	
 	// Get all account
 	accounts, err := s.balanceRepo.GetAllAccountBalances()
@@ -33,14 +37,15 @@ func (s balanceService) GetSummaryBalance()(*model.SummaryBalanceResponse, error
 	totalAsset 	:= 0.0
 	totalDebt	:= 0.0
 
-	AccountListResponse := []model.AccountListResponse{}
+	AccountListResponses := []account.AccountListResponse{}
 
-	for _, account := range accounts{
-		totalAsset += float64(account.Amount)
-		AccountListResponse = append(AccountListResponse, model.AccountListResponse{
-			AccountName: account.AccountName,
-			Type: account.Type,
-			Amount: account.Amount,
+	for _, accountItem := range accounts{
+		totalAsset += float64(accountItem.Amount)
+
+		AccountListResponses = append(AccountListResponses, account.AccountListResponse{
+			AccountName: accountItem.AccountName,
+			Type: accountItem.Type,
+			Amount: accountItem.Amount,
 		})
 	}
 
@@ -49,19 +54,19 @@ func (s balanceService) GetSummaryBalance()(*model.SummaryBalanceResponse, error
 	}
 
 
-	summaryBalance := model.SummaryBalanceResponse{
+	summaryBalance := SummaryBalanceResponse{
 		TotalAsset: totalAsset,
 		TotalDebt: totalDebt,
-		Accounts: AccountListResponse,
+		Accounts: AccountListResponses,
 		Debts: debts,
 	}
 
 	return &summaryBalance,nil
 }
 
-func (s balanceService) CreateDebt(debt model.NewDebtRequest)(*model.DebtResponse,error){
+func (s balanceService) CreateDebt(debt NewDebtRequest)(*DebtResponse,error){
 
-	debtModel := model.Debt{
+	debtModel := Debt{
 		Name: debt.Name,
 		Amount: debt.Amount,
 		InterestRate: debt.InterestRate,
@@ -75,7 +80,7 @@ func (s balanceService) CreateDebt(debt model.NewDebtRequest)(*model.DebtRespons
 		return nil, errs.NewUnexpectedError()
 	}
 
-	resultResponse := model.DebtResponse{
+	resultResponse := DebtResponse{
 		ID: result.ID,
 		Name: result.Name,
 		Amount: result.Amount,

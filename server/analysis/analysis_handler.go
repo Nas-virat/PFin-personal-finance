@@ -1,16 +1,16 @@
-package handlers
+package analysis
 
 import (
-	"github.com/Nas-virat/PFin-personal-finance/service"
+	"github.com/Nas-virat/PFin-personal-finance/account"
 	"github.com/gofiber/fiber/v2"
 )
 
 type analysisHandler struct {
-	accSrv service.AccountService
+	accSrv account.AccountService
 }
 
-func NewAnalysisHandler(accSrv service.AccountService) accountHandler {
-	return accountHandler{accSrv: accSrv}
+func NewAnalysisHandler(accSrv account.AccountService) analysisHandler {
+	return analysisHandler{accSrv: accSrv}
 }
 
 func (h analysisHandler) GetAnalysisWealth(c *fiber.Ctx) error {

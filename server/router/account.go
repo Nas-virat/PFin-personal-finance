@@ -1,9 +1,7 @@
 package router
 
 import (
-	"github.com/Nas-virat/PFin-personal-finance/handlers"
-	"github.com/Nas-virat/PFin-personal-finance/repository"
-	"github.com/Nas-virat/PFin-personal-finance/service"
+	"github.com/Nas-virat/PFin-personal-finance/account"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -12,9 +10,9 @@ import (
 func SetupAccountRoutes(app *fiber.App, db *gorm.DB) {
  // grouping
 
-	accountRepositoryDB := repository.NewAccountRepositoryDB(db)
-	accountService := service.NewAccountService(accountRepositoryDB)
-	accountHandler := handlers.NewAccountHandler(accountService)
+	accountRepositoryDB := account.NewAccountRepositoryDB(db)
+	accountService := account.NewAccountService(accountRepositoryDB)
+	accountHandler := account.NewAccountHandler(accountService)
 
 	api := app.Group("/api")
 	v1 := api.Group("/account")

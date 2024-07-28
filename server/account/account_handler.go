@@ -1,20 +1,17 @@
-package handlers
+package account
 
 import (
 	"strconv"
-
-	"github.com/Nas-virat/PFin-personal-finance/model"
 	"github.com/Nas-virat/PFin-personal-finance/response"
-	"github.com/Nas-virat/PFin-personal-finance/service"
 	"github.com/gofiber/fiber/v2"
 )
 
 
 type accountHandler struct {
-	accSrv service.AccountService
+	accSrv AccountService
 }
 
-func NewAccountHandler(accSrv service.AccountService) accountHandler{
+func NewAccountHandler(accSrv AccountService) accountHandler{
 	return accountHandler{accSrv:accSrv}
 }
 
@@ -28,7 +25,7 @@ func NewAccountHandler(accSrv service.AccountService) accountHandler{
 // @Router /api/account/create [post]
 func (h accountHandler) CreateAccountHandler(c *fiber.Ctx) error {
 
-	request := model.NewAccountRequest{}
+	request := NewAccountRequest{}
 
 	err := c.BodyParser(&request)
 
@@ -76,7 +73,7 @@ func (h accountHandler) GetAccountsHandler(c *fiber.Ctx) error {
 
 func (h accountHandler) EditAccountInfoHandler(c *fiber.Ctx) error {
 	
-	request := model.NewAccountRequest{}
+	request := NewAccountRequest{}
 
 	id, err := c.ParamsInt("id")
 

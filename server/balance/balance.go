@@ -1,6 +1,9 @@
-package model
+package balance
 
-import "gorm.io/gorm"
+import (
+	"github.com/Nas-virat/PFin-personal-finance/account"
+	"gorm.io/gorm"
+)
 
 
 type Debt struct{
@@ -10,7 +13,7 @@ type Debt struct{
 	InterestRate 	float64 `gorm:"not null"`
 	MinimumPayment 	float64 
 	AccountID 		int
-	Account 		Account `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Account 		account.Account `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
 type NewDebtRequest struct {
@@ -33,6 +36,6 @@ type DebtResponse struct {
 type SummaryBalanceResponse struct {
 	TotalAsset	float64		`json:"total_asset"`
 	TotalDebt	float64		`json:"total_debt"`
-	Accounts 	[]AccountListResponse	`json:"accounts"` // bank and investment account
+	Accounts 	[]account.AccountListResponse	`json:"accounts"` // bank and investment account
 	Debts    	[]Debt		`json:"debts"`	  	
 }

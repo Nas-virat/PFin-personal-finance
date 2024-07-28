@@ -1,4 +1,4 @@
-package model
+package analysis
 
 type AnalysisWealth struct {
 	NetWorth                 float64 `json:"net_worth"`

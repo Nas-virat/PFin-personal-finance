@@ -1,18 +1,16 @@
-package handlers
+package balance
 
 import (
-	"github.com/Nas-virat/PFin-personal-finance/model"
 	"github.com/Nas-virat/PFin-personal-finance/response"
-	"github.com/Nas-virat/PFin-personal-finance/service"
 	"github.com/gofiber/fiber/v2"
 )
 
 
 type balanceHandler struct{
-	balanceSrv service.BalanceService
+	balanceSrv BalanceService
 }
 
-func NewBalanceHandler(balanceSrv service.BalanceService) balanceHandler {
+func NewBalanceHandler(balanceSrv BalanceService) balanceHandler {
 	return balanceHandler{balanceSrv: balanceSrv}
 }
 
@@ -31,7 +29,7 @@ func (h balanceHandler) GetSummaryBalanceHandler(c *fiber.Ctx) error {
 
 func (h balanceHandler) CreateDebtHandler(c *fiber.Ctx) error {
 
-	request := model.NewDebtRequest{}
+	request := NewDebtRequest{}
 
 	err := c.BodyParser(&request)
 

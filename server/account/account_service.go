@@ -1,22 +1,29 @@
-package service
+package account
 
 import (
 	"strings"
 
 	"github.com/Nas-virat/PFin-personal-finance/errs"
-	"github.com/Nas-virat/PFin-personal-finance/model"
-	"github.com/Nas-virat/PFin-personal-finance/repository"
 )
 
-type accountService struct {
-	accRepo repository.AccountRepository
+type AccountService interface {
+	CreateAccount(account NewAccountRequest) (*NewAccountResponse, error)
+   GetAccountById(accountID int) (*AccountResponse, error)
+   GetAccounts() ([]AccountResponse, error)
+   EditAccountInfo(account NewAccountRequest, id int) (*NewAccountResponse, error)
 }
 
-func NewAccountService(accRepo repository.AccountRepository) AccountService {
+
+
+type accountService struct {
+	accRepo AccountRepository
+}
+
+func NewAccountService(accRepo AccountRepository) AccountService {
 	return accountService{accRepo: accRepo}
 }
 
-func (s accountService) CreateAccount(account model.NewAccountRequest) (*model.NewAccountResponse, error) {
+func (s accountService) CreateAccount(account NewAccountRequest) (*NewAccountResponse, error) {
 
 	// check account is negative or not
 	if account.Amount < 0 {
@@ -28,7 +35,7 @@ func (s accountService) CreateAccount(account model.NewAccountRequest) (*model.N
 		return nil, errs.NewVaildationError("Account can not be " + account.Type)
 	}
 
-	newAccount := model.Account{
+	newAccount := Account{
 		AccountName: account.Name,
 		Type:        account.Type,
 		Amount:      account.Amount,
@@ -41,7 +48,7 @@ func (s accountService) CreateAccount(account model.NewAccountRequest) (*model.N
 		return nil, errs.NewUnexpectedError()
 	}
 
-	response := model.NewAccountResponse{
+	response := NewAccountResponse{
 		AccountID: int(createAccount.ID),
 		Opendate:  createAccount.CreatedAt,
 		Type:	  createAccount.Type,
@@ -52,14 +59,14 @@ func (s accountService) CreateAccount(account model.NewAccountRequest) (*model.N
 	return &response, nil
 }
 
-func (s accountService) GetAccountById(accountID int) (*model.AccountResponse, error) {
+func (s accountService) GetAccountById(accountID int) (*AccountResponse, error) {
 
 	account, err := s.accRepo.GetAccountById(accountID)
 
 	if err != nil {
 		return nil, errs.NewUnexpectedError()
 	}
-	accountResponse := model.AccountResponse{
+	accountResponse := AccountResponse{
 		AccountID: int(account.ID),
 		AccountName: account.AccountName,
 		Type: account.Type,
@@ -71,18 +78,18 @@ func (s accountService) GetAccountById(accountID int) (*model.AccountResponse, e
 	return &accountResponse, nil
 }
 
-func (s accountService) GetAccounts() ([]model.AccountResponse, error) {
+func (s accountService) GetAccounts() ([]AccountResponse, error) {
 
 	accounts, err := s.accRepo.GetAccounts()
 	if err != nil{
 		return nil, errs.NewUnexpectedError()
 	}
 
-	accountResponses := []model.AccountResponse{}
+	accountResponses := []AccountResponse{}
 
 	for _, account := range accounts{
 		accountResponses = append(accountResponses, 
-			model.AccountResponse{
+			AccountResponse{
 				AccountID: int(account.ID),
 				AccountName: account.AccountName,
 				Type: account.Type,
@@ -96,7 +103,7 @@ func (s accountService) GetAccounts() ([]model.AccountResponse, error) {
 	return accountResponses, nil
 }
 
-func (s accountService) EditAccountInfo(account model.NewAccountRequest, id int) (*model.NewAccountResponse, error){
+func (s accountService) EditAccountInfo(account NewAccountRequest, id int) (*NewAccountResponse, error){
 
 	// check account is negative or not
 	if account.Amount < 0 {
@@ -114,7 +121,11 @@ func (s accountService) EditAccountInfo(account model.NewAccountRequest, id int)
 		return nil, errs.NewVaildationError("This account id is not exist")
 	}
 
-	accountRepoInsert := model.Account{
+	if err != nil{
+		return nil, errs.NewUnexpectedError()
+	}
+
+	accountRepoInsert := Account{
 		AccountName: accountCheck.AccountName,
 		Type: account.Type,
 		Amount: account.Amount,
@@ -130,7 +141,7 @@ func (s accountService) EditAccountInfo(account model.NewAccountRequest, id int)
 		return nil, errs.NewUnexpectedError()
 	}
 
-	accResponse := model.NewAccountResponse{
+	accResponse := NewAccountResponse{
 		AccountID: int(updatedAccount.ID),
 		Opendate:  updatedAccount.CreatedAt,
 		Type:	  updatedAccount.Type,

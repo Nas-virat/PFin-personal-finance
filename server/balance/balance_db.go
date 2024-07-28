@@ -1,7 +1,7 @@
-package repository
+package balance
 
 import (
-	"github.com/Nas-virat/PFin-personal-finance/model"
+	"github.com/Nas-virat/PFin-personal-finance/account"
 	"gorm.io/gorm"
 )
 
@@ -15,8 +15,8 @@ func NewBalanceRepositoryDB(db *gorm.DB) BalanceRepository{
 }
 
 
-func (repo balanceRepositoryDB) GetAllAccountBalances() ([]model.Account, error){
-	accounts := []model.Account{}
+func (repo balanceRepositoryDB) GetAllAccountBalances() ([]account.Account, error){
+	accounts := []account.Account{}
 
 	err := repo.db.Find(&accounts).Error
 	if err != nil{
@@ -26,9 +26,9 @@ func (repo balanceRepositoryDB) GetAllAccountBalances() ([]model.Account, error)
 	return accounts, nil
 }
 
-func (repo balanceRepositoryDB) GetAllDebtBalances() ([]model.Debt, error){
+func (repo balanceRepositoryDB) GetAllDebtBalances() ([]Debt, error){
 
-	debts := []model.Debt{}
+	debts := []Debt{}
 
 	err := repo.db.Find(&debts).Error
 	if err != nil{
@@ -39,7 +39,7 @@ func (repo balanceRepositoryDB) GetAllDebtBalances() ([]model.Debt, error){
 	return debts,nil
 }
 
-func (repo balanceRepositoryDB) CreateDebt(debtInfo model.Debt)(*model.Debt, error){
+func (repo balanceRepositoryDB) CreateDebt(debtInfo Debt)(*Debt, error){
 
 	result := repo.db.Create(&debtInfo)
 	if result.Error != nil{

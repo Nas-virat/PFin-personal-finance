@@ -1,15 +1,17 @@
 package utils
 
 import (
-	"github.com/Nas-virat/PFin-personal-finance/model"
+	"github.com/Nas-virat/PFin-personal-finance/account"
+	"github.com/Nas-virat/PFin-personal-finance/balance"
+	"github.com/Nas-virat/PFin-personal-finance/transaction"
 	"gorm.io/gorm"
 )
 
 func Migration(db *gorm.DB) {
 
 	db.AutoMigrate(
-		&model.Account{},
-		&model.Transaction{},
-		&model.Debt{},
+		&account.Account{},
+		&transaction.Transaction{},
+		&balance.Debt{},
 	)
 }

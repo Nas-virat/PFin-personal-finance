@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 
 import { AddButton } from "@/components/Addbutton";
@@ -18,7 +17,7 @@ export default function Page() {
   return (
     <div>
       <div className="flex justify-between mx-32 text-pf-gray-900 font-bold text-2xl">
-        <h1 className="text-[48px]">Investment</h1>
+        <h1 className="text-[48px]">Tax</h1>
         <AddButton
           text="Add Transaction"
           func={() =>
@@ -37,29 +36,10 @@ export default function Page() {
       <PageContainer>
         <div className="w-full flex justify-center">
           <Card>
-            <HeaderCard text="Total Expense" />
-            <TableInfo
-              data={[
-                { 1: 2, 3: 4 },
-                { 3: 4, 4: 5 },
-                { 5: 6, 6: 7 },
-              ]}
-              columns={["Stock Name", "Amount"]}
-              total={30}
-            />
-          </Card>
-          <Card>
-            <div className="flex justify-center">
-              <DoughnutChart
-                data={[10, 20, 30]}
-                labels={["Equity", "Debt", "Gold"]}
-                backgroundColor={["#FF6384", "#36A2EB", "#FFCE56"]}
-              />
-            </div>
+            <HeaderCard text="Total Tax" />
           </Card>
         </div>
       </PageContainer>
     </div>
   );
 }
-

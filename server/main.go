@@ -1,59 +1,49 @@
 package main
 
 import (
+	"context"
+	"net/http"
 	"os"
+	"os/signal"
 	"strconv"
+	"syscall"
 	"time"
 
 	"github.com/Nas-virat/PFin-personal-finance/constant"
 	"github.com/Nas-virat/PFin-personal-finance/db"
+	docs "github.com/Nas-virat/PFin-personal-finance/docs"
+
 	"github.com/Nas-virat/PFin-personal-finance/log"
 	"github.com/Nas-virat/PFin-personal-finance/router"
 	"github.com/Nas-virat/PFin-personal-finance/utils"
 	"github.com/gin-gonic/gin"
-	docs "github.com/Nas-virat/PFin-personal-finance/docs"
-   	swaggerfiles "github.com/swaggo/files"
+	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"gorm.io/gorm"
 )
 
 func main() {
 
-	logg := log.NewLogger()
+	logger := log.NewLogger()
 
 	// Initialize Timezone
 	initTimeZone()
-	logg.Info("Initialized timezone")
+	logger.Info("Initialized timezone")
 
 	db := initDB()
-	logg.Info("Initialized database")
+	logger.Info("Initialized database")
+	
 
 	// Migrate the schema
 	utils.Migration(db)
-	logg.Info("Migrated the schema")
+	logger.Info("Migrated the schema")
 
 	if constant.IsDevelopment {
-		logg.Warn("Running in development mode")
+		logger.Warn("Running in development mode")
 	}
 
 	r := gin.Default()
 	
-
-	// app := fiber.New()
-	// app.Use(logger.New())
-	// app.Use(cors.New(
-	// 	cors.Config{
-	// 		AllowOrigins: "*",
-	// 		AllowHeaders: "Origin, Content-Type, Accept",
-	// 	},
-	// ))
-	// logg.Info("Initialized fiber")
-
-	// app.Get("/", func(c *fiber.Ctx) error {
-	// 	return c.SendString("root")
-	// })
-
-	// app.Get("/swagger/*", swagger.HandlerDefault)
 	v1 := r.Group("/api")
 	docs.SwaggerInfo.BasePath = "/api"
 	
@@ -63,7 +53,38 @@ func main() {
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	r.Run(":8080")
+	srv := &http.Server{
+		Addr:    ":8080",
+		Handler: r,
+	}
+
+	// Initializing the server in a goroutine so that
+	// it won't block the graceful shutdown handling below
+	go func() {
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			logger.Fatal(err.Error())
+		}
+	}()
+
+	// Wait for interrupt signal to gracefully shutdown the server with
+	// a timeout of 5 seconds.
+	quit := make(chan os.Signal, 1)
+	// kill (no param) default send syscall.SIGTERM
+	// kill -2 is syscall.SIGINT
+	// kill -9 is syscall.SIGKILL but can't be catch, so don't need add it
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+	logger.Info("Shutting down server...")
+
+	// The context is used to inform the server it has 5 seconds to finish
+	// the request it is currently handling
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		logger.Fatal(err.Error())
+	}
+
+	logger.Info("Server exiting")
 }
 
 func initTimeZone() {

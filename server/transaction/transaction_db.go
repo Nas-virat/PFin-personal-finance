@@ -49,11 +49,11 @@ func (r transactionRepositoryDB) GetTransactions() ([]Transaction, error) {
 	return transactions, nil
 }
 
-func (r transactionRepositoryDB) GetTransactionInYear(year int) ([]Transaction,error) {
+func (r transactionRepositoryDB) GetTransactionInYear(year int) ([]Transaction, error) {
 
 	transactions := []Transaction{}
 
-	err := r.db.Where("transaction_year = ?",year).Find(&transactions).Error
+	err := r.db.Where("transaction_year = ?", year).Find(&transactions).Error
 	if err != nil {
 		return nil, err
 	}
@@ -74,16 +74,16 @@ func (r transactionRepositoryDB) GetTransactionInRangeMonthYear(month, year int)
 	return transactions, nil
 }
 
-func (r transactionRepositoryDB) GetTransactionInRangeDayMonthYear(day,month,year int) ([]Transaction,error){
+func (r transactionRepositoryDB) GetTransactionInRangeDayMonthYear(day, month, year int) ([]Transaction, error) {
 	transactions := []Transaction{}
 
-	err := r.db.Where("transaction_date = ? AND transaction_month = ? AND transaction_year = ?", day,month,year).Find(&transactions).Error
+	err := r.db.Where("transaction_date = ? AND transaction_month = ? AND transaction_year = ?", day, month, year).Find(&transactions).Error
 
 	if err != nil {
 		return nil, err
 	}
 
-	return transactions,nil
+	return transactions, nil
 }
 
 func (r transactionRepositoryDB) UpdateTransaction(id uint, newInfo Transaction) (*Transaction, error) {
@@ -98,13 +98,13 @@ func (r transactionRepositoryDB) UpdateTransaction(id uint, newInfo Transaction)
 
 	// update the transaction
 	result = r.db.Model(&transaction).Updates(Transaction{
-		TransactionType: newInfo.TransactionType,
-		Category:        newInfo.Category,
-		Description:     newInfo.Description,
-		Amount:          newInfo.Amount,
-		TransactionDate: newInfo.TransactionDate,
+		TransactionType:  newInfo.TransactionType,
+		Category:         newInfo.Category,
+		Description:      newInfo.Description,
+		Amount:           newInfo.Amount,
+		TransactionDate:  newInfo.TransactionDate,
 		TransactionMonth: newInfo.TransactionMonth,
-		TransactionYear: newInfo.TransactionYear,
+		TransactionYear:  newInfo.TransactionYear,
 	})
 
 	if result.Error != nil {

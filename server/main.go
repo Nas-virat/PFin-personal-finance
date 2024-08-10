@@ -32,7 +32,6 @@ func main() {
 
 	db := initDB()
 	logger.Info("Initialized database")
-	
 
 	// Migrate the schema
 	utils.Migration(db)
@@ -43,11 +42,11 @@ func main() {
 	}
 
 	r := gin.Default()
-	
+
 	v1 := r.Group("/api")
 	docs.SwaggerInfo.BasePath = "/api"
-	
-	router.SetupAccountRoutes(v1,db)
+
+	router.SetupAccountRoutes(v1, db)
 	router.SetupTransactionRoute(v1, db)
 	router.SetupBalanceRoutes(v1, db)
 
@@ -105,12 +104,12 @@ func initDB() *gorm.DB {
 	}
 
 	dbConfig := db.Config{
-		User:     os.Getenv("DATABASE_USER"),
-		Password: os.Getenv("DATABASE_PASSWORD"),
-		Host:     os.Getenv("DATABASE_HOST"),
-		Port:     port,
-		Name:     os.Getenv("DATABASE_NAME"),
-		TimeZone: os.Getenv("DATABASE_TIMEZONE"),
+		User:       os.Getenv("DATABASE_USER"),
+		Password:   os.Getenv("DATABASE_PASSWORD"),
+		Host:       os.Getenv("DATABASE_HOST"),
+		Port:       port,
+		Name:       os.Getenv("DATABASE_NAME"),
+		TimeZone:   os.Getenv("DATABASE_TIMEZONE"),
 		DisableTLS: true,
 	}
 	db := db.ConnectDB(dbConfig)

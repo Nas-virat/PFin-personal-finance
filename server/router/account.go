@@ -8,12 +8,12 @@ import (
 
 // SetupRoutes func
 func SetupAccountRoutes(app *gin.RouterGroup, db *gorm.DB) {
- // grouping
+	// grouping
 
 	accountRepositoryDB := account.NewAccountRepositoryDB(db)
 	accountService := account.NewAccountService(accountRepositoryDB)
 	accountHandler := account.NewAccountHandler(accountService)
-	
+
 	// routes
 	app.GET("/account", accountHandler.GetAccountsHandler)
 	app.GET("/account/:id", accountHandler.GetAccountByIdHandler)

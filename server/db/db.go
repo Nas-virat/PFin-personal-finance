@@ -30,13 +30,11 @@ func ConnectDB(c Config) *gorm.DB {
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=%s TimeZone=%s", c.Host, c.User, c.Password, c.Name, c.Port, sslmode, c.TimeZone)
 
-	
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
-		log.Fatalf("Cann't open gorm postgres %s",err.Error())
+		log.Fatalf("Cann't open gorm postgres %s", err.Error())
 	}
-
 
 	return db
 }

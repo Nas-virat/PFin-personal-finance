@@ -2,7 +2,7 @@ package analysis
 
 import (
 	"github.com/Nas-virat/PFin-personal-finance/account"
-	"github.com/gofiber/fiber/v2"
+	"github.com/gin-gonic/gin"
 )
 
 type analysisHandler struct {
@@ -13,14 +13,14 @@ func NewAnalysisHandler(accSrv account.AccountService) analysisHandler {
 	return analysisHandler{accSrv: accSrv}
 }
 
-func (h analysisHandler) GetAnalysisWealth(c *fiber.Ctx) error {
+func (h analysisHandler) GetAnalysisWealth(c *gin.Context) error {
 	return nil
 }
 
-func (h analysisHandler) GetNetWorthByMonth(c *fiber.Ctx) error {
+func (h analysisHandler) GetNetWorthByMonth(c *gin.Context) error {
 	return nil
 }
 
-func (h analysisHandler) GetFreeCashFlowByMonth(c *fiber.Ctx) error {
+func (h analysisHandler) GetFreeCashFlowByMonth(c *gin.Context) error {
 	return nil
 }

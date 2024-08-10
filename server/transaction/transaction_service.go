@@ -1,8 +1,8 @@
 package transaction
 
 import (
-	"time"
 	"github.com/Nas-virat/PFin-personal-finance/errs"
+	"time"
 )
 
 type TransactionService interface {
@@ -96,10 +96,10 @@ func (s transactionService) GetSummaryRevenueExpenseYear() (*SummaryRevenueExpen
 		if err != nil {
 			return nil, errs.NewUnexpectedError()
 		}
-		for _, transaction := range transactions{
-			if transaction.TransactionType == "income"{
+		for _, transaction := range transactions {
+			if transaction.TransactionType == "income" {
 				TotalRevenue[month-1] += transaction.Amount
-			}else if transaction.TransactionType == "expense"{
+			} else if transaction.TransactionType == "expense" {
 				TotalExpense[month-1] += transaction.Amount
 			}
 		}

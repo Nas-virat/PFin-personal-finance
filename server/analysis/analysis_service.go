@@ -5,11 +5,10 @@ import (
 	"github.com/Nas-virat/PFin-personal-finance/transaction"
 )
 
-
-type AnalysisService interface{
-	GetAnalysisWealth() (*AnalysisWealth,error)
-	GetNetWorthByMonth() (*NetWorthByMonth,error)
-	GetFreeCashFlowByMonth() (*FreeCashFlowByMonth,error)
+type AnalysisService interface {
+	GetAnalysisWealth() (*AnalysisWealth, error)
+	GetNetWorthByMonth() (*NetWorthByMonth, error)
+	GetFreeCashFlowByMonth() (*FreeCashFlowByMonth, error)
 }
 
 type analysisService struct {
@@ -35,5 +34,3 @@ func (analysisService) GetFreeCashFlowByMonth() (*FreeCashFlowByMonth, error) {
 func (analysisService) GetNetWorthByMonth() (*NetWorthByMonth, error) {
 	panic("unimplemented")
 }
-
-

@@ -33,12 +33,14 @@ func (h accountHandler) CreateAccountHandler(c *gin.Context) {
 
 	if err != nil {
 		response.NewErrorResponse(c, http.StatusBadRequest, err)
+		return
 	}
 
 	accountResponse, err := h.accSrv.CreateAccount(request)
 
 	if err != nil {
 		response.NewErrorResponse(c, http.StatusUnprocessableEntity, err)
+		return
 	}
 
 	response.NewSuccessResponse(c, "insert successfully", http.StatusCreated, accountResponse)
@@ -50,7 +52,7 @@ func (h accountHandler) CreateAccountHandler(c *gin.Context) {
 //		@Tags			account
 //		@Accept			json
 //		@Produce		json
-//	 @Param        	id   	path     int  true  "Account ID"
+//	  @Param        	id   	path     int  true  "Account ID"
 //		@Success		200	{object}	AccountResponse
 //		@Router			/api/account/{id} [get]
 func (h accountHandler) GetAccountByIdHandler(c *gin.Context) {
@@ -60,12 +62,14 @@ func (h accountHandler) GetAccountByIdHandler(c *gin.Context) {
 	accountId, err := strconv.Atoi(id)
 	if err != nil {
 		response.NewErrorResponse(c, http.StatusBadRequest, err)
+		return
 	}
 
 	account, err := h.accSrv.GetAccountById(accountId)
 
 	if err != nil {
 		response.NewErrorResponse(c, http.StatusBadRequest, err)
+		return
 	}
 
 	response.NewSuccessResponse(c, "get account by id", http.StatusOK, account)
@@ -85,6 +89,7 @@ func (h accountHandler) GetAccountsHandler(c *gin.Context) {
 
 	if err != nil {
 		response.NewErrorResponse(c, http.StatusBadRequest, err)
+		return
 	}
 
 	response.NewSuccessResponse(c, "get all accounts", http.StatusOK, accounts)
@@ -109,18 +114,21 @@ func (h accountHandler) EditAccountInfoHandler(c *gin.Context) {
 
 	if err != nil || accountId < 0 {
 		response.NewErrorResponse(c, http.StatusBadRequest, err)
+		return
 	}
 
 	err = c.ShouldBindJSON(&request)
 
 	if err != nil {
 		response.NewErrorResponse(c, http.StatusBadRequest, err)
+		return
 	}
 
 	accountResponse, err := h.accSrv.EditAccountInfo(request, accountId)
 
 	if err != nil {
 		response.NewErrorResponse(c, http.StatusBadRequest, err)
+		return
 	}
 
 	response.NewSuccessResponse(c, "edit account info", http.StatusOK, accountResponse)

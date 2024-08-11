@@ -23,6 +23,11 @@ func NewAccountService(accRepo AccountRepository) accountService {
 
 func (s accountService) CreateAccount(accountRequest NewAccountRequest) (*NewAccountResponse, error) {
 
+	// check if Name is empty or not
+	if len(accountRequest.Name) == 0 {
+		return nil, errs.NewVaildationError("Account Name can not be empty")
+	}
+
 	// check account is negative or not
 	if accountRequest.Amount < 0 {
 		return nil, errs.NewVaildationError("Account intial Balance can not less than 0")
@@ -65,7 +70,7 @@ func (s accountService) GetAccountById(accountID int) (*AccountResponse, error) 
 		return nil, errs.NewUnexpectedError()
 	}
 	accountResponse := AccountResponse{
-		AccountID:   int(account.ID),
+		AccountID:   int(accountID),
 		AccountName: account.AccountName,
 		Type:        account.Type,
 		Amount:      account.Amount,
@@ -102,6 +107,11 @@ func (s accountService) GetAccounts() ([]AccountResponse, error) {
 }
 
 func (s accountService) EditAccountInfo(accountRequest NewAccountRequest, id int) (*NewAccountResponse, error) {
+
+	// check if Name is empty or not
+	if len(accountRequest.Name) == 0 {
+		return nil, errs.NewVaildationError("Account Name can not be empty")
+	}
 
 	// check account is negative or not
 	if accountRequest.Amount < 0 {

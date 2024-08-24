@@ -88,7 +88,7 @@ func (h accountHandler) GetAccountsHandler(c *gin.Context) {
 	accounts, err := h.accSrv.GetAccounts()
 
 	if err != nil {
-		response.NewErrorResponse(c, http.StatusBadRequest, err)
+		response.NewErrorResponse(c, http.StatusInternalServerError, err)
 		return
 	}
 

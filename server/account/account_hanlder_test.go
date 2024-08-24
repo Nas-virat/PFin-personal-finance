@@ -216,3 +216,63 @@ func TestGetAccountByIdHandler(t *testing.T) {
 		assert.Equal(t, http.StatusBadRequest, w.Code)
 	})
 }
+
+func TestGetAccountHandler(t *testing.T) {
+
+	t.Run("should return accounts if repo successfully", func(t *testing.T) {
+
+		w := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(w)
+
+		accountResponse := []account.AccountResponse{
+			{
+				AccountID:   1,
+				AccountName: "Name",
+				Type:        "bank",
+				Amount:      300.0,
+				Description: "Hello",
+				Status:      true,
+			},
+			{
+				AccountID:   2,
+				AccountName: "Find",
+				Type:        "bank",
+				Amount:      300.0,
+				Description: "Hello world",
+				Status:      true,
+			},
+		}
+		mockAccountService := &MockAccountService{}
+		mockAccountService.On("GetAccounts").Return(accountResponse, nil)
+		handler := account.NewAccountHandler(mockAccountService)
+
+		want, _ := json.Marshal(response.Response{
+			Success: true,
+			Message: "get all accounts",
+			Data:    accountResponse,
+		})
+
+		c.Request, _ = http.NewRequest(http.MethodGet, "/api/account", nil)
+		handler.GetAccountsHandler(c)
+
+		//assert
+		assert.Equal(t, http.StatusOK, w.Code)
+		assert.JSONEq(t, string(want), w.Body.String())
+	})
+
+	t.Run("should return error if repo fail to get data", func(t *testing.T) {
+
+		w := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(w)
+
+		mockAccountService := &MockAccountService{}
+		mockAccountService.On("GetAccounts").Return(nil, errs.NewUnexpectedError())
+		handler := account.NewAccountHandler(mockAccountService)
+
+		c.Request, _ = http.NewRequest(http.MethodGet, "/api/account", nil)
+		handler.GetAccountsHandler(c)
+
+		//assert
+		assert.Equal(t, http.StatusInternalServerError, w.Code)
+	})
+}

@@ -75,6 +75,7 @@ func TestCreateAccountHandler(t *testing.T) {
 			Amount:    1000,
 			Status:    true,
 		}
+
 		mockAccountService.On("CreateAccount", request).Return(&mockResponse, nil)
 
 		handler := account.NewAccountHandler(mockAccountService)
@@ -155,5 +156,63 @@ func TestCreateAccountHandler(t *testing.T) {
 
 		//assert
 		assert.Equal(t, http.StatusUnprocessableEntity, w.Code)
+	})
+}
+
+func TestGetAccountByIdHandler(t *testing.T) {
+
+	t.Run("should return Account when AccountId is exist", func(t *testing.T) {
+
+		w := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(w)
+		id := 1
+
+		accountResponse := &account.AccountResponse{
+			AccountID:   1,
+			AccountName: "Name",
+			Type:        "bank",
+			Amount:      300.0,
+			Description: "Hello",
+			Status:      true,
+		}
+
+		// Set the route parameters manually
+		c.Params = gin.Params{
+			{Key: "id", Value: "1"},
+		}
+
+		mockAccountService := &MockAccountService{}
+		mockAccountService.On("GetAccountById", id).Return(accountResponse, nil)
+		handler := account.NewAccountHandler(mockAccountService)
+
+		want, _ := json.Marshal(response.Response{
+			Success: true,
+			Message: "get account by id",
+			Data:    accountResponse,
+		})
+
+		//act
+		c.Request, _ = http.NewRequest(http.MethodGet, "/api/account/1", nil)
+		handler.GetAccountByIdHandler(c)
+
+		//assert
+		assert.Equal(t, http.StatusOK, w.Code)
+		assert.JSONEq(t, string(want), w.Body.String())
+	})
+
+	t.Run("should return Error when AccountId is not integer", func(t *testing.T) {
+
+		w := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(w)
+
+		mockAccountService := &MockAccountService{}
+		handler := account.NewAccountHandler(mockAccountService)
+
+		//act
+		c.Request, _ = http.NewRequest(http.MethodGet, "/api/account/abc", nil)
+		handler.GetAccountByIdHandler(c)
+
+		//assert
+		assert.Equal(t, http.StatusBadRequest, w.Code)
 	})
 }
